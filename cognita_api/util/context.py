@@ -2,6 +2,7 @@ from .config import Config
 from motor.motor_asyncio import AsyncIOMotorClient
 from redis.asyncio import Redis
 from beanie import init_beanie
+from ..models import *
 
 
 class Context:
@@ -26,4 +27,4 @@ class Context:
         )
 
     async def initialize(self):
-        await init_beanie(database=self.mongo_database, document_models=[])
+        await init_beanie(database=self.mongo_database, document_models=[Session, User])
