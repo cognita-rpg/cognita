@@ -1,0 +1,50 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api.dev
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - ./cognita_api:/cognita/cognita_api
+
+    depends_on:
+      - mongo
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client.dev
+
+    ports:
+      - "5173:5173"
+
+    volumes:
+      - ./cognita_client:/cognita/cognita_client
+
+    depends_on:
+      - api
+      - mongo
+
+  mongo:
+    image: mongo:jammy
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: cognita
+      MONGO_INITDB_ROOT_PASSWORD: cognita
+    volumes:
+      - ./vols/mongo/data:/data/db
+    ports:
+      - 27017:27017
+
+  redis:
+    image: redis/redis-stack-server:7.2.0-v9
+    restart: always
+    volumes:
+      - ./vols/redis/data:/data
+    ports:
+      - 6379:6379
+    environment:
+      - "REDIS_ARGS=--requirepass cognita"

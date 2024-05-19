@@ -1,0 +1,11 @@
+FROM node:21-alpine
+
+RUN mkdir -p /cognita/cognita_client /cognita/certs
+VOLUME /cognita/cognita_client
+EXPOSE 5173/tcp
+COPY ./cognita_client/package.json /cognita/cognita_client
+COPY ./certs /cognita/certs
+WORKDIR /cognita/cognita_client
+RUN yarn install
+
+ENTRYPOINT [ "yarn", "dev", "--host" ]

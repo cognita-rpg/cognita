@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cognita-api"
+version = "0.0.1"
+dependencies = [
+  "litestar[standard]",
+  "pydantic",
+  "redis",
+  "beanie",
+  "motor"
+]
+requires-python = ">=3.12"
+authors = [
+  {name = "Dax Harris", email = "mvh3875@rit.edu"}
+]
+description = "Core API for Cognita"
+readme = "README.md"
+license = {file = "LICENSE"}
+
+[project.urls]
+Homepage = "https://github.com/cognita-rpg"
+Repository = "https://github.com/cognita-rpg/cognita"
+"Bug Tracker" = "https://github.com/cognita-rpg/cognita/issues"
