@@ -3,11 +3,12 @@ from litestar.datastructures import State
 from litestar.di import Provide
 from datetime import datetime
 from .util import Context, CookieSessionManager, provide_session
+from .models import *
 
 
 @get("/")
-async def get_root() -> datetime:
-    return datetime.now()
+async def get_state(session: Session) -> AuthStateModel:
+    return await AuthStateModel.from_session(session)
 
 
 async def on_startup(app: Litestar) -> None:
@@ -21,7 +22,7 @@ async def depends_context(state: State) -> Context:
 
 
 app = Litestar(
-    route_handlers=[get_root],
+    route_handlers=[get_state],
     dependencies={
         "context": Provide(depends_context),
         "session": Provide(provide_session),

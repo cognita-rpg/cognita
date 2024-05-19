@@ -45,6 +45,14 @@ class PasswordModel(BaseModel):
         return hashed.hex() == self.hash
 
 
+class RedactedUser(BaseModel):
+    id: str
+    username: str
+
+    async def user(self) -> "User | None":
+        return await User.get(self.id)
+
+
 class User(BaseObject):
     username: str
     password: PasswordModel
@@ -58,3 +66,17 @@ class User(BaseObject):
     @classmethod
     def create(cls, username: str, password: str) -> "User":
         return User(username=username, password=PasswordModel.derive(password))
+
+    @property
+    def redacted(self) -> RedactedUser:
+        return RedactedUser(id=self.id, username=self.username)
+
+
+class AuthStateModel(BaseModel):
+    session: Session
+    user: RedactedUser | None
+
+    @classmethod
+    async def from_session(cls, session: Session) -> "AuthStateModel":
+        user = await session.user()
+        return AuthStateModel(session=session, user=user.redacted if user else None)
