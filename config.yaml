@@ -1,0 +1,14 @@
+storage:
+  mongo:
+    username: "cognita"
+    password: "cognita"
+    host: "mongo"
+    port: 27017
+    database: "cognita"
+  
+  redis:
+    username: null
+    password: "cognita"
+    host: "redis"
+    port: 6379
+    database: 0
