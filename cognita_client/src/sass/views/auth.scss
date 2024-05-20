@@ -1,0 +1,14 @@
+.auth-panel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: inline-block;
+    height: fit-content;
+    width: calc(100% - 32px);
+    max-width: 384px;
+    transform: translate(-50%, -50%);
+
+    .auth-section {
+        background-color: var(--mantine-color-default);
+    }
+}

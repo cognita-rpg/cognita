@@ -12,6 +12,7 @@ import {
     isSuccess,
 } from "./types";
 import { Session, User } from "../../types/auth";
+import { BaseAPIMethods, APIMixin } from "./methods";
 
 export function useApi(): ApiContextModel {
     const context = useContext(ApiContext);
@@ -51,6 +52,12 @@ export function useUser(): User | null {
     } else {
         return null;
     }
+}
+
+export function useApiMethods<TMixins extends APIMixin<any, any>>(
+    ...mixins: TMixins[]
+) {
+    return mixins.reduce((prev, current) => current(prev), BaseAPIMethods);
 }
 
 export { ApiProvider, ApiContext, isFailure, isSuccess };

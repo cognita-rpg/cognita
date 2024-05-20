@@ -8,31 +8,34 @@ import { createInstance } from "i18next";
 import { I18nextProvider } from "react-i18next";
 import * as langEn from "./lang/en.json";
 import { ApiProvider } from "./util/api";
-
-const i18nInst = createInstance({
-    fallbackLng: "en",
-    lng: "en",
-    resources: {
-        en: {
-            translation: langEn,
-        },
-    },
-});
+import { useMemo } from "react";
 
 function App() {
+    const i18nInst = useMemo(() => {
+        const instance = createInstance({
+            fallbackLng: "en",
+            lng: "en",
+            resources: {
+                en: {
+                    translation: langEn,
+                },
+            },
+        });
+        instance.init();
+        return instance;
+    }, []);
+    console.log(i18nInst);
     return (
-        <I18nextProvider i18n={i18nInst}>
-            <ApiProvider>
-                <MantineProvider defaultColorScheme="dark">
+        <ApiProvider>
+            <MantineProvider defaultColorScheme="dark">
+                <I18nextProvider i18n={i18nInst} defaultNS={"translation"}>
                     <Notifications />
                     <ModalsProvider>
-                        <div id="app">
-                            <RouterProvider router={appRouter} />
-                        </div>
+                        <RouterProvider router={appRouter} />
                     </ModalsProvider>
-                </MantineProvider>
-            </ApiProvider>
-        </I18nextProvider>
+                </I18nextProvider>
+            </MantineProvider>
+        </ApiProvider>
     );
 }
 

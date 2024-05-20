@@ -1,4 +1,6 @@
-#app {
+@use "./views/index.scss";
+
+#root {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -8,14 +10,4 @@
     width: 100vw;
     height: 100vh;
     background-color: var(--mantine-color-body);
-}
-
-#root {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    overflow: hidden;
-    display: inline-block;
-    width: 100vw;
-    height: 100vh;
 }
