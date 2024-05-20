@@ -16,16 +16,12 @@ export type ApiResponse<TData = any, TError = string> =
     | ApiReponseSuccess<TData>
     | ApiResponseError<TError>;
 
-export function isSuccess<TData = any>(
-    obj: ApiResponse<TData>
-): obj is ApiReponseSuccess<TData> {
-    return obj.success;
+export function isSuccess<TData = any>(obj: any): obj is ApiReponseSuccess<TData> {
+    return obj.success !== undefined && obj.success;
 }
 
-export function isFailure<TError = any>(
-    obj: ApiResponse<any, TError>
-): obj is ApiResponseError<TError> {
-    return !obj.success;
+export function isFailure<TError = any>(obj: any): obj is ApiResponseError<TError> {
+    return obj.success !== undefined && !obj.success;
 }
 
 export type RequestOptions =

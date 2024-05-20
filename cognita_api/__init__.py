@@ -4,6 +4,7 @@ from litestar.di import Provide
 from datetime import datetime
 from .util import Context, CookieSessionManager, provide_session
 from .models import *
+from .controllers import *
 
 
 @get("/")
@@ -22,7 +23,7 @@ async def depends_context(state: State) -> Context:
 
 
 app = Litestar(
-    route_handlers=[get_state],
+    route_handlers=[get_state, AuthController],
     dependencies={
         "context": Provide(depends_context),
         "session": Provide(provide_session),

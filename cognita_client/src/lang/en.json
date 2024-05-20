@@ -1,5 +1,24 @@
 {
   "common": {
     "appName": "Terra Cognita"
+  },
+  "views": {
+    "auth": {
+      "create": {
+        "title": "Create Account",
+        "username": "Username",
+        "password": "Password",
+        "passwordConfirm": "Confirm Password",
+        "switch": "Log In",
+        "submit": "Create"
+      },
+      "login": {
+        "title": "Log In",
+        "username": "Username",
+        "password": "Password",
+        "switch": "Create Account",
+        "submit": "Log In"
+      }
+    }
   }
 }

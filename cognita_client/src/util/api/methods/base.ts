@@ -1,3 +1,4 @@
+import { omit } from "lodash";
 import { Session, User } from "../../../types/auth";
 import { ApiContextModel, ApiResponse, RequestOptions } from "../types";
 
@@ -28,12 +29,12 @@ export class BaseAPIMethods {
 
     public async request<TData = any, TError = any>(
         path: string,
-        options?: Omit<RequestOptions, "path">
+        options?: Partial<RequestOptions>
     ): Promise<ApiResponse<TData, TError>> {
         if (this.apiContext.state === "ready") {
             return await this.apiContext.request<TData, TError>({
                 path,
-                ...(options ?? {}),
+                ...omit(options ?? {}, "path"),
             });
         } else {
             return {
@@ -45,7 +46,9 @@ export class BaseAPIMethods {
     }
 }
 
+export type Constructor<T extends object> = new (...args: any[]) => T;
+
 export type APIMixin<
-    TBase extends BaseAPIMethods,
+    TBase extends Constructor<any>,
     TMixin extends BaseAPIMethods
 > = (base: TBase) => TMixin;
