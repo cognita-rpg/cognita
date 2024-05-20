@@ -52,7 +52,7 @@ export function ApiProvider({
                 try {
                     return {
                         success: false,
-                        error: JSON.parse(data),
+                        error: JSON.parse(data).detail ?? JSON.parse(data),
                         code: result.status,
                     };
                 } catch {
@@ -68,6 +68,7 @@ export function ApiProvider({
     );
 
     const reload = useCallback(async () => {
+        setAuthState(null);
         const result = await request<AuthState>({ path: "/" });
         if (result.success) {
             setAuthState(result.data);

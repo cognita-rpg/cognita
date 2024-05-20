@@ -16,10 +16,12 @@ import {
     IconUserPlus,
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
-import { useApiMethods, AuthMixin } from "../../util/api";
+import { useApiMethods, AuthMixin, isFailure } from "../../util/api";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
 import { PasswordInput } from "../../components/PasswordInput";
+import { useNavigate } from "react-router-dom";
+import { useNotifs } from "../../util/notifications";
 
 function AuthCreatePanel({
     setMode,
@@ -27,16 +29,51 @@ function AuthCreatePanel({
     setMode: (mode: "create" | "login") => void;
 }) {
     const { t } = useTranslation();
+    const api = useApiMethods(AuthMixin);
+    const nav = useNavigate();
+    const { success, error } = useNotifs();
     const form = useForm({
         initialValues: {
             username: "",
             password: "",
             passwordConfirm: "",
         },
+        validate: {
+            username: (username) => {
+                return username.length > 0
+                    ? null
+                    : t("error.common.field.empty");
+            },
+            password: (password, { passwordConfirm }) => {
+                return password === passwordConfirm && password.length > 0
+                    ? null
+                    : t("error.view.auth.create.password_match");
+            },
+            passwordConfirm: (passwordConfirm, { password }) => {
+                return password === passwordConfirm && password.length > 0
+                    ? null
+                    : t("error.view.auth.create.password_match");
+            },
+        },
     });
     return (
         <Paper className="auth-section create" p="sm" radius="sm">
-            <form onSubmit={form.onSubmit(console.log)}>
+            <form
+                onSubmit={form.onSubmit(({ username, password }) =>
+                    api.createUser(username, password).then((value) => {
+                        if (isFailure(value)) {
+                            error(
+                                t("error.view.create.failed", {
+                                    reason: t(value.error ?? "error.unknown"),
+                                })
+                            );
+                        } else {
+                            success(t("views.auth.create.success"));
+                            nav("/");
+                        }
+                    })
+                )}
+            >
                 <Stack gap="xs">
                     <Group gap="sm" justify="space-between">
                         <IconUserPlus />
@@ -90,15 +127,46 @@ function AuthLoginPanel({
     setMode: (mode: "create" | "login") => void;
 }) {
     const { t } = useTranslation();
+    const api = useApiMethods(AuthMixin);
+    const nav = useNavigate();
+    const { success, error } = useNotifs();
     const form = useForm({
         initialValues: {
             username: "",
             password: "",
         },
+        validate: {
+            username: (username) => {
+                return username.length > 0
+                    ? null
+                    : t("error.common.field.empty");
+            },
+            password: (password) => {
+                return password.length > 0
+                    ? null
+                    : t("error.common.field.empty");
+            },
+        },
     });
     return (
         <Paper className="auth-section login" p="sm" radius="sm">
-            <form onSubmit={form.onSubmit(console.log)}>
+            <form
+                onSubmit={form.onSubmit(({ username, password }) =>
+                    api.login(username, password).then((value) => {
+                        if (isFailure(value)) {
+                            console.log(value);
+                            error(
+                                t("error.view.login.failed", {
+                                    reason: t(value.error ?? "error.unknown"),
+                                })
+                            );
+                        } else {
+                            success(t("views.auth.login.success"));
+                            nav("/");
+                        }
+                    })
+                )}
+            >
                 <Stack gap="xs">
                     <Group gap="sm" justify="space-between">
                         <IconLogin2 />

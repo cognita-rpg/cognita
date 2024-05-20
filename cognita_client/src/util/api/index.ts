@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ApiProvider } from "./ApiProvider";
 import {
     ApiContext,
@@ -57,10 +57,23 @@ export function useUser(): User | null {
 export function useApiMethods<TMixins extends APIMixin<any, any>>(
     ...mixins: TMixins[]
 ): typeof BaseAPIMethods & ReturnType<TMixins>["prototype"] {
-    return mixins.reduce(
-        (prev, current) => current(prev),
-        BaseAPIMethods
-    ) as any;
+    const api = useApi();
+    const [methods, setMethods] = useState(
+        new (mixins.reduce((prev, current) => current(prev), BaseAPIMethods))(
+            api
+        )
+    );
+
+    useEffect(
+        () =>
+            setMethods((current) => {
+                current.context = api;
+                return current;
+            }),
+        [api]
+    );
+
+    return methods as any;
 }
 
 export {

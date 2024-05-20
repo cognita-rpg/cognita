@@ -1,6 +1,12 @@
 {
   "common": {
-    "appName": "Terra Cognita"
+    "appName": "Terra Cognita",
+    "notif": {
+      "success": "Success!",
+      "warning": "Warning!",
+      "info": "Notice:",
+      "error": "Error:"
+    }
   },
   "views": {
     "auth": {
@@ -10,15 +16,49 @@
         "password": "Password",
         "passwordConfirm": "Confirm Password",
         "switch": "Log In",
-        "submit": "Create"
+        "submit": "Create",
+        "success": "Created user!"
       },
       "login": {
         "title": "Log In",
         "username": "Username",
         "password": "Password",
         "switch": "Create Account",
-        "submit": "Log In"
+        "submit": "Log In",
+        "success": "Logged in!"
+      }
+    },
+    "layout": {
+      "nav": {
+        "home": "Home",
+        "projects": "Projects",
+        "compendium": "Compendium",
+        "user_actions": {
+          "settings": "User Settings",
+          "logout": "Log Out"
+        }
       }
     }
+  },
+  "error": {
+    "view": {
+      "auth": {
+        "create": {
+          "password_match": "Passwords must match."
+        }
+      },
+      "create": {
+        "failed": "User creation failed: {{reason}}"
+      },
+      "login": {
+        "failed": "Login failed: {{reason}}"
+      }
+    },
+    "common": {
+      "field": {
+        "empty": "Field cannot be empty"
+      }
+    },
+    "unknown": "Unknown error"
   }
 }

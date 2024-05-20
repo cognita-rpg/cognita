@@ -3,6 +3,7 @@ from litestar.di import Provide
 from litestar.exceptions import *
 from pydantic import BaseModel
 from ..models import Session, User, RedactedUser
+from ..util import guard_user
 
 
 class UserModel(BaseModel):
@@ -37,3 +38,8 @@ class AuthController(Controller):
         session.user_id = result.id
         await session.save()
         return result.redacted
+
+    @post("/logout", guards=[guard_user])
+    async def logout_user(self, session: Session) -> None:
+        session.user_id = None
+        await session.save()

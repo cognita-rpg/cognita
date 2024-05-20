@@ -45,7 +45,11 @@ function App() {
     });
     return (
         <ApiProvider>
-            <MantineProvider defaultColorScheme="dark" theme={theme}>
+            <MantineProvider
+                defaultColorScheme="dark"
+                theme={theme}
+                withCssVariables
+            >
                 <I18nextProvider i18n={i18nInst} defaultNS={"translation"}>
                     <Notifications />
                     <ModalsProvider>

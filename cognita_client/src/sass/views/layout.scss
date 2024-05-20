@@ -1,0 +1,17 @@
+.user-menu {
+    cursor: pointer;
+}
+
+.mobile-nav {
+    height: calc(100% - 60px);
+    padding: 0px;
+    display: flex;
+
+    .mobile-nav-stack {
+        flex-grow: 1;
+
+        .mobile-nav-items {
+            flex-grow: 1;
+        }
+    }
+}

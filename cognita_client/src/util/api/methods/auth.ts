@@ -15,6 +15,7 @@ export function AuthMixin<TBase extends Constructor<BaseAPIMethods>>(
                 body: { username, password },
             });
             if (result.success) {
+                await this.apiContext.reload();
                 return result.data;
             } else {
                 return result;
@@ -30,10 +31,16 @@ export function AuthMixin<TBase extends Constructor<BaseAPIMethods>>(
                 body: { username, password },
             });
             if (result.success) {
+                await this.apiContext.reload();
                 return result.data;
             } else {
                 return result;
             }
+        }
+
+        public async logout(): Promise<void> {
+            await this.request<null>("/auth/logout", { method: "POST" });
+            await this.apiContext.reload();
         }
     };
 }
