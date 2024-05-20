@@ -24,6 +24,7 @@ function App() {
         instance.init();
         return instance;
     }, []);
+
     const theme = createTheme({
         fontFamily: "'Roboto', sans-serif",
         colors: {

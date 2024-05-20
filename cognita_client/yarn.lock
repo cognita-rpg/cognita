@@ -314,6 +314,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@paciolan/remote-module-loader@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@paciolan/remote-module-loader/-/remote-module-loader-3.0.3.tgz#3fd58c88521e2ce2696aa065ca1e6838cf974ea4"
+  integrity sha512-gwdJcP5QQbO7OUf00FWh+A5DkF3TnIv06JB3aMpm9pbbHcdouFrjo4nEW7HtbWeIs7z3gwGEVd82clAmzVzh3Q==
+
 "@popperjs/core@^2.9.0":
   version "2.11.8"
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
