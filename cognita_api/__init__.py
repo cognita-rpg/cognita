@@ -23,7 +23,7 @@ async def depends_context(state: State) -> Context:
 
 
 app = Litestar(
-    route_handlers=[get_state, AuthController],
+    route_handlers=[get_state, AuthController, PluginController],
     dependencies={
         "context": Provide(depends_context),
         "session": Provide(provide_session),
