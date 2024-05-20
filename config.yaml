@@ -12,3 +12,8 @@ storage:
     host: "redis"
     port: 6379
     database: 0
+
+plugins:
+  root: "/cognita/plugins"
+  enabled:
+    - plugin-template

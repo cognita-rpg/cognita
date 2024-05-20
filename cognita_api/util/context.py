@@ -3,6 +3,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from redis.asyncio import Redis
 from beanie import init_beanie
 from ..models import *
+from .plugin import PluginLoader
 
 
 class Context:
@@ -25,6 +26,7 @@ class Context:
             password=redis_config.password,
             db=redis_config.database,
         )
+        self.plugins = PluginLoader(self.config)
 
     async def initialize(self):
         await init_beanie(database=self.mongo_database, document_models=[Session, User])

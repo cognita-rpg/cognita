@@ -2,9 +2,10 @@ FROM python:3.12.2-alpine
 
 RUN mkdir -p /cognita/cognita_api /cognita/certs
 VOLUME /cognita/cognita_api
+VOLUME /cognita/plugins
+VOLUME ./config.yaml /cognita/config.yaml
 COPY ./requirements.txt /cognita
 COPY ./certs /cognita/certs
-COPY ./config.yaml /cognita
 WORKDIR /cognita
 RUN python -m pip install -r requirements.txt
 EXPOSE 8000/tcp

@@ -2,7 +2,7 @@ from litestar import Litestar, get
 from litestar.datastructures import State
 from litestar.di import Provide
 from datetime import datetime
-from .util import Context, CookieSessionManager, provide_session
+from .util import Context, CookieSessionManager, provide_session, PluginManifest
 from .models import *
 from .controllers import *
 

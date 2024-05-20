@@ -27,8 +27,14 @@ class StorageConfig(BaseModel):
     redis: RedisStorage
 
 
+class PluginConfig(BaseModel):
+    root: str
+    enabled: list[str]
+
+
 class Config(BaseModel):
     storage: StorageConfig
+    plugins: PluginConfig
 
     @classmethod
     def load(cls) -> "Config":

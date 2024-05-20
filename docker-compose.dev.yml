@@ -9,6 +9,8 @@ services:
 
     volumes:
       - ./cognita_api:/cognita/cognita_api
+      - ../plugins:/cognita/plugins
+      - ./config.yaml:/cognita/config.yaml
 
     depends_on:
       - mongo
