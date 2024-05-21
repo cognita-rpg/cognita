@@ -1,4 +1,4 @@
-from typing import Type, TypeVar
+from typing import Any, Type, TypeVar
 from enum import StrEnum
 from .base import BaseObject
 from .auth import User, Session
@@ -20,6 +20,7 @@ class EntityRelation(StrEnum):
 
 TData = TypeVar("TData")
 TEntity = TypeVar("TEntity", bound=BaseObject)
+TEntityOther = TypeVar("TEntityOther", bound=BaseObject)
 
 
 class EntityLink[TData](BaseObject):
@@ -76,3 +77,39 @@ class EntityLink[TData](BaseObject):
                 return await User.get(entity_id)
             case _:
                 raise NotImplementedError
+
+    @classmethod
+    def create_link[
+        TData
+    ](
+        cls: Type["EntityLink[TData]"],
+        source: TEntity,
+        target: TEntityOther,
+        type: EntityRelation = EntityRelation.LINK,
+        data: TData | None = None,
+    ) -> "EntityLink[TData]":
+        source_id = source.id
+        target_id = target.id
+
+        if isinstance(source, Session):
+            source_type = EntityType.SESSION
+        elif isinstance(source, User):
+            source_type = EntityType.USER
+        else:
+            raise NotImplementedError
+
+        if isinstance(target, Session):
+            target_type = EntityType.SESSION
+        elif isinstance(target, User):
+            target_type = EntityType.USER
+        else:
+            raise NotImplementedError
+
+        return EntityLink[TData](
+            source_id=source_id,
+            source_type=source_type,
+            target_id=target_id,
+            target_type=target_type,
+            relation=type,
+            data=data,
+        )
