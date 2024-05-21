@@ -10,6 +10,8 @@ from .models import (
     PluginAssetExport,
     PluginComponentExport,
     PluginFunctionExport,
+    PluginArticleTemplateFeature,
+    PluginCompendiumTemplateFeature,
     EXPORT_TYPES,
 )
 

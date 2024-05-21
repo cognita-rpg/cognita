@@ -44,7 +44,7 @@ class PluginBaseFeature(BaseModel):
     required_exports: list[str]
 
 
-class PluginArticleTemplateFeature(BaseModel):
+class PluginArticleTemplateFeature(PluginBaseFeature):
     """Feature model for article templates"""
 
     type: Literal["article-template"] = "article-template"
@@ -63,7 +63,7 @@ class PluginArticleTemplateFeature(BaseModel):
     text_renderer: str
 
 
-class PluginCompendiumTemplateFeature(BaseModel):
+class PluginCompendiumTemplateFeature(PluginBaseFeature):
     """Feature model for compendium entries"""
 
     type: Literal["compendium-template"] = "compendium-template"

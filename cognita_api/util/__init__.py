@@ -11,5 +11,7 @@ from .plugin import (
     PluginAssetExport,
     PluginComponentExport,
     PluginJSONExport,
+    PluginArticleTemplateFeature,
+    PluginCompendiumTemplateFeature,
     EXPORT_TYPES,
 )
