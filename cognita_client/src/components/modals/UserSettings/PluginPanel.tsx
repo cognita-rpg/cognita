@@ -26,7 +26,6 @@ import {
 } from "@tabler/icons-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { UserSelfMixin } from "../../../util/api/methods/userSelf";
-import { useDidUpdate } from "@mantine/hooks";
 
 function PluginItem({
     manifest,
@@ -41,10 +40,6 @@ function PluginItem({
     const { t } = useTranslation();
     const [enabled, setEnabled] = useState<boolean>(isEnabled);
 
-    useDidUpdate(() => {
-        api.set_plugin_enabled(manifest.metadata.slug, enabled).then(refresh);
-    }, [enabled]);
-
     useEffect(() => setEnabled(isEnabled), [isEnabled]);
 
     return (
@@ -58,7 +53,13 @@ function PluginItem({
                     <Text size="lg">{manifest.metadata.name}</Text>
                     <Switch
                         checked={enabled}
-                        onChange={(event) => setEnabled(event.target.checked)}
+                        onChange={(event) => {
+                            setEnabled(event.target.checked);
+                            api.set_plugin_enabled(
+                                manifest.metadata.slug,
+                                event.target.checked
+                            ).then(refresh);
+                        }}
                     />
                 </Group>
                 <Paper className="plugin-img-outer" radius="md" p={0}>

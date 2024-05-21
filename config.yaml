@@ -17,3 +17,4 @@ plugins:
   root: "/cognita/plugins"
   enabled:
     - plugin-template
+    - 5e-plugin

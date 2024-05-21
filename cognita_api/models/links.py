@@ -1,5 +1,7 @@
 from typing import Any, ClassVar, Type, TypeVar
 from enum import StrEnum
+
+from pydantic import Field
 from .base import BaseObject
 from .auth import User, Session
 from ..util.plugin import Plugin
@@ -21,37 +23,36 @@ class EntityRelation(StrEnum):
     LINK = "link"  # If SOURCE and TARGET are linked non-hierarchically
 
 
-TData = TypeVar("TData")
 TEntity = TypeVar("TEntity")
 TEntityOther = TypeVar("TEntityOther")
 
 
-class EntityLink[TData](BaseObject):
+class EntityLink(BaseObject):
     context: ClassVar[Any] = None
     source_type: EntityType
     source_id: str
     target_type: EntityType
     target_id: str
     relation: EntityRelation
-    data: TData | None = None
+    data: Any | None = None
 
     class Settings:
         name = "entity_link"
 
     @classmethod
-    def _initialize(cls: Type["EntityLink[TData]"], context: Any) -> None:
+    def _initialize(cls: Type["EntityLink"], context: Any) -> None:
         cls.context = context
 
     @classmethod
     async def get_links(
-        cls: Type["EntityLink[TData]"],
+        cls: Type["EntityLink"],
         source_id: str,
         source_type: EntityType | None = None,
         relation_type: EntityRelation | None = None,
         target_id: str | None = None,
         target_type: EntityType | None = None,
         data_query: Any | None = None,
-    ) -> list["EntityLink[TData]"]:
+    ) -> list["EntityLink"]:
         query = {"source_id": source_id}
 
         if source_type:
@@ -65,7 +66,7 @@ class EntityLink[TData](BaseObject):
         if data_query:
             query["data"] = data_query
 
-        return await EntityLink[TData].find(query).to_list()
+        return await EntityLink.find(query).to_list()
 
     async def source[TEntity](self) -> TEntity | None:
         entity_type = self.source_type
@@ -94,15 +95,13 @@ class EntityLink[TData](BaseObject):
                 raise NotImplementedError
 
     @classmethod
-    def create_link[
-        TData
-    ](
-        cls: Type["EntityLink[TData]"],
+    def create_link(
+        cls: Type["EntityLink"],
         source: TEntity,
         target: TEntityOther,
         type: EntityRelation = EntityRelation.LINK,
-        data: TData | None = None,
-    ) -> "EntityLink[TData]":
+        data: Any | None = None,
+    ) -> "EntityLink":
         source_id = source.metadata.slug if isinstance(source, Plugin) else source.id
         target_id = target.metadata.slug if isinstance(target, Plugin) else target.id
 
@@ -124,7 +123,7 @@ class EntityLink[TData](BaseObject):
         else:
             raise NotImplementedError
 
-        return EntityLink[TData](
+        return EntityLink(
             source_id=source_id,
             source_type=source_type,
             target_id=target_id,
