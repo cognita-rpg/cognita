@@ -30,13 +30,13 @@
     },
     "layout": {
       "nav": {
-          "home": "Home",
-          "collections": "Collections",
-          "compendium": "Compendium",
-          "user_actions": {
-              "settings": "User Settings",
-              "logout": "Log Out"
-          }
+        "home": "Home",
+        "collections": "Collections",
+        "compendium": "Compendium",
+        "user_actions": {
+          "settings": "User Settings",
+          "logout": "Log Out"
+        }
       }
     }
   },
@@ -60,5 +60,18 @@
       }
     },
     "unknown": "Unknown error"
+  },
+  "modals": {
+    "user_settings": {
+      "title": "User Settings",
+      "tab": {
+        "profile": {
+          "title": "Profile"
+        },
+        "plugins": {
+          "title": "Plugins"
+        }
+      }
+    }
   }
 }

@@ -28,6 +28,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { trimStart } from "lodash";
+import { useModals } from "../../components/modals";
 
 export function Layout() {
     const api = useApi();
@@ -48,6 +49,8 @@ export function Layout() {
     const isMobile = useMediaQuery("(max-width: 600px)");
     const [mobileMenu, { toggle: toggleMobileMenu, close: closeMobileMenu }] =
         useDisclosure(false);
+
+    const { userSettings } = useModals();
 
     return (
         <AppShell className="app-layout">
@@ -115,6 +118,7 @@ export function Layout() {
                                 <Menu.Dropdown>
                                     <Menu.Item
                                         leftSection={<IconSettings size={16} />}
+                                        onClick={() => userSettings()}
                                     >
                                         {t(
                                             "views.layout.nav.user_actions.settings"
@@ -197,7 +201,11 @@ export function Layout() {
                                 <Avatar>
                                     <IconUser />
                                 </Avatar>
-                                <ActionIcon size={42} variant="light">
+                                <ActionIcon
+                                    size={42}
+                                    variant="light"
+                                    onClick={() => userSettings()}
+                                >
                                     <IconSettings />
                                 </ActionIcon>
                                 <Button
