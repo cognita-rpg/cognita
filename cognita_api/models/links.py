@@ -10,6 +10,7 @@ class EntityType(StrEnum):
     FOLDER = "folder"
     ENTITY = "entity"
     SESSION = "session"
+    SCENE = "scene"
 
 
 class EntityRelation(StrEnum):

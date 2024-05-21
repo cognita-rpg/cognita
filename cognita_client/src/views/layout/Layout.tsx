@@ -27,6 +27,7 @@ import {
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { trimStart } from "lodash";
 
 export function Layout() {
     const api = useApi();
@@ -34,6 +35,8 @@ export function Layout() {
     const location = useLocation();
     const nav = useNavigate();
     const { t } = useTranslation();
+
+    const firstSegment = trimStart(location.pathname, "/").split("/")[0];
 
     useEffect(() => {
         if (api.state === "ready") {
@@ -67,25 +70,38 @@ export function Layout() {
                             size="sm"
                         />
                     ) : (
-                        <Group gap={0}>
+                        <Group gap={4}>
                             <Button
                                 leftSection={<IconHome size={20} />}
-                                variant="subtle"
+                                variant={
+                                    firstSegment === "" ? "light" : "subtle"
+                                }
                                 justify="space-between"
+                                onClick={() => nav("/")}
                             >
                                 {t("views.layout.nav.home")}
                             </Button>
                             <Button
                                 leftSection={<IconNotebook size={20} />}
-                                variant="subtle"
+                                variant={
+                                    firstSegment === "collections"
+                                        ? "light"
+                                        : "subtle"
+                                }
                                 justify="space-between"
+                                onClick={() => nav("/collections")}
                             >
                                 {t("views.layout.nav.collections")}
                             </Button>
                             <Button
                                 leftSection={<IconBooks size={20} />}
-                                variant="subtle"
+                                variant={
+                                    firstSegment === "compendium"
+                                        ? "light"
+                                        : "subtle"
+                                }
                                 justify="space-between"
+                                onClick={() => nav("/compendium")}
                             >
                                 {t("views.layout.nav.compendium")}
                             </Button>
@@ -141,24 +157,37 @@ export function Layout() {
                                 <Button
                                     size="lg"
                                     leftSection={<IconHome size={24} />}
-                                    variant="subtle"
+                                    variant={
+                                        firstSegment === "" ? "light" : "subtle"
+                                    }
                                     justify="space-between"
+                                    onClick={() => nav("/")}
                                 >
                                     {t("views.layout.nav.home")}
                                 </Button>
                                 <Button
                                     size="lg"
                                     leftSection={<IconNotebook size={24} />}
-                                    variant="subtle"
+                                    variant={
+                                        firstSegment === "collections"
+                                            ? "light"
+                                            : "subtle"
+                                    }
                                     justify="space-between"
+                                    onClick={() => nav("/collections")}
                                 >
                                     {t("views.layout.nav.collections")}
                                 </Button>
                                 <Button
                                     size="lg"
                                     leftSection={<IconBooks size={24} />}
-                                    variant="subtle"
+                                    variant={
+                                        firstSegment === "compendium"
+                                            ? "light"
+                                            : "subtle"
+                                    }
                                     justify="space-between"
+                                    onClick={() => nav("/compendium")}
                                 >
                                     {t("views.layout.nav.compendium")}
                                 </Button>

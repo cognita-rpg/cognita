@@ -6,7 +6,20 @@ export const appRouter = createBrowserRouter([
     {
         path: "/",
         element: <Layout />,
-        children: [],
+        children: [
+            {
+                path: "/",
+                element: <></>,
+            },
+            {
+                path: "/collections/*",
+                element: <></>,
+            },
+            {
+                path: "/compendium/*",
+                element: <></>,
+            },
+        ],
     },
     {
         path: "/auth",
