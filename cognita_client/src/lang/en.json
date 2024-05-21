@@ -69,7 +69,12 @@
           "title": "Profile"
         },
         "plugins": {
-          "title": "Plugins"
+          "title": "Plugins",
+          "item": {
+            "version": "Version",
+            "author": "Author"
+          },
+          "search": "Search"
         }
       }
     }

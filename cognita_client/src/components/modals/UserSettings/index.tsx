@@ -1,6 +1,7 @@
 import { Tabs } from "@mantine/core";
 import { IconPuzzle, IconUserEdit } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
+import { PluginPanel } from "./PluginPanel";
 
 export function UserSettingsModal() {
     const { t } = useTranslation();
@@ -28,7 +29,7 @@ export function UserSettingsModal() {
                 eee
             </Tabs.Panel>
             <Tabs.Panel pl="sm" value="plugins">
-                eee
+                <PluginPanel />
             </Tabs.Panel>
         </Tabs>
     );

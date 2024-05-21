@@ -7,6 +7,7 @@ class PluginManifest_Metadata(BaseModel):
     author: str | None = None
     version: str | None = None
     urls: dict[str, str] = {}
+    image: str | None = None
 
 
 class PluginManifest_ExportEntry(BaseModel):

@@ -12,7 +12,7 @@ import {
     isSuccess,
 } from "./types";
 import { Session, User } from "../../types/auth";
-import { BaseAPIMethods, APIMixin, AuthMixin } from "./methods";
+import { BaseAPIMethods, APIMixin, AuthMixin, PluginMixin } from "./methods";
 
 export function useApi(): ApiContextModel {
     const context = useContext(ApiContext);
@@ -83,6 +83,7 @@ export {
     isSuccess,
     BaseAPIMethods,
     AuthMixin,
+    PluginMixin,
 };
 export type {
     ApiContextModel,

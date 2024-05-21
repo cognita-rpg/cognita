@@ -54,12 +54,12 @@ function App() {
                 withCssVariables
             >
                 <I18nextProvider i18n={i18nInst} defaultNS={"translation"}>
-                    <Notifications />
-                    <ModalsProvider>
-                        <PluginProvider>
+                    <PluginProvider>
+                        <Notifications />
+                        <ModalsProvider>
                             <RouterProvider router={appRouter} />
-                        </PluginProvider>
-                    </ModalsProvider>
+                        </ModalsProvider>
+                    </PluginProvider>
                 </I18nextProvider>
             </MantineProvider>
         </ApiProvider>

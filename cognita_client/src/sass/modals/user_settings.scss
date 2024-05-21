@@ -1,0 +1,30 @@
+.plugin-panel {
+    .plugin-item {
+        background-color: var(--mantine-color-default) !important;
+
+        .plugin-img-outer {
+            overflow: hidden;
+            background-color: var(--mantine-color-body);
+            .plugin-img-wrapper {
+                position: relative;
+                overflow: hidden;
+                border-radius: 4px;
+
+                .plugin-img {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+            }
+        }
+
+        .plugin-link {
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--mantine-color-primary-light-hover);
+            }
+        }
+    }
+}

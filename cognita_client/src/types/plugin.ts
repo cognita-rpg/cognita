@@ -4,6 +4,7 @@ export type PluginMetadata = {
     author: string | null;
     version: string | null;
     urls: { [key: string]: string };
+    image?: string | null;
 };
 
 export type PluginExport = {

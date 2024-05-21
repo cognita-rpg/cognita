@@ -43,6 +43,7 @@ class EntityLink[TData](BaseObject):
         relation_type: EntityRelation | None = None,
         target_id: str | None = None,
         target_type: EntityType | None = None,
+        data_query: Any | None = None,
     ) -> list["EntityLink[TData]"]:
         query = {"source_id": source_id}
 
@@ -54,6 +55,8 @@ class EntityLink[TData](BaseObject):
             query["target_id"] = target_id
         if target_type:
             query["target_type"] = target_type
+        if data_query:
+            query["data"] = data_query
 
         return await EntityLink[TData].find(query).to_list()
 
