@@ -47,8 +47,6 @@ function PluginItem({
 
     useEffect(() => setEnabled(isEnabled), [isEnabled]);
 
-    console.log(enabled);
-
     return (
         <Paper className="plugin-item" p="sm" radius="sm">
             <Stack gap="sm" className="plugin-stack">
