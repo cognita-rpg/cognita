@@ -39,6 +39,57 @@ EXPORT_TYPES = (
 )
 
 
+class PluginBaseFeature(BaseModel):
+    type: str
+    required_exports: list[str]
+
+
+class PluginArticleTemplateFeature(BaseModel):
+    """Feature model for article templates"""
+
+    type: Literal["article-template"] = "article-template"
+
+    # Template name
+    name: str
+    # Template description
+    description: str | None = None
+    # Template icon
+    icon: str | None = None
+    # Template tags
+    tags: list[str] = []
+    # Template form renderer (Component export) - When in edit mode
+    form_renderer: str
+    # Template text renderer (Component export) - When in viewing mode
+    text_renderer: str
+
+
+class PluginCompendiumTemplateFeature(BaseModel):
+    """Feature model for compendium entries"""
+
+    type: Literal["compendium-template"] = "compendium-template"
+
+    # Template name
+    template_name: str
+    # Template icon
+    template_icon: str | None = None
+    # Template renderer (Component export)
+    renderer: str
+    # Item name resolver (Function export -> string)
+    resolve_name: str
+    # Item icon resolver (Function export -> ReactNode)
+    resolve_icon: str | None = None
+    # Item description resolver (Function export -> string)
+    resolve_description: str | None = None
+    # Item image resolver (Function export -> image URI)
+    resolve_image: str | None = None
+    # Records/data source (JSON export, [{record}, {record}, ...])
+    records: str
+
+
+FEATURE_TYPES = PluginArticleTemplateFeature | PluginCompendiumTemplateFeature
+
+
 class PluginManifest(BaseModel):
     metadata: PluginManifest_Metadata
     exports: dict[str, EXPORT_TYPES] = {}
+    features: list[FEATURE_TYPES] = []
