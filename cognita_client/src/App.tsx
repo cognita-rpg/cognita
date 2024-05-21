@@ -44,6 +44,7 @@ function App() {
         primaryColor: "primary",
         primaryShade: 4,
     });
+
     return (
         <ApiProvider>
             <MantineProvider

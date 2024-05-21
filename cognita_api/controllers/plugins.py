@@ -1,5 +1,5 @@
 from typing import AsyncGenerator
-from litestar import Controller, get
+from litestar import Controller, MediaType, get
 from ..util import (
     PluginManifest,
     PluginManifest_Metadata,
@@ -47,4 +47,4 @@ class PluginController(Controller):
         if not export in plugin.manifest.exports.keys():
             raise NotFoundException("error.api.plugin.export.unknown")
 
-        return Stream(read_export(plugin, export))
+        return Stream(read_export(plugin, export), media_type="text/javascript")
