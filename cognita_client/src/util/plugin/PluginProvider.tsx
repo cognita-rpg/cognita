@@ -1,6 +1,4 @@
-import createLoadRemoteModule, {
-    createRequires,
-} from "@paciolan/remote-module-loader";
+import { createRequires } from "@paciolan/remote-module-loader";
 import * as react from "react";
 import * as reactJsx from "react/jsx-runtime";
 import * as reactDom from "react-dom";
@@ -51,26 +49,6 @@ export function PluginProvider({
         reload();
     }, [reload, apiState, api.context.state]);
 
-    const loadExport = react.useCallback(
-        async (plugin: string, exportName: string) => {
-            if (!Object.keys(plugins).includes(plugin)) {
-                return null;
-            }
-
-            if (!Object.keys(plugins[plugin].exports).includes(exportName)) {
-                return null;
-            }
-
-            const remoteLoad = createLoadRemoteModule({
-                requires: dependencies,
-            });
-            return await remoteLoad(
-                `/api/plugins/${plugin}/export/${exportName}`
-            );
-        },
-        [apiState, plugins, dependencies]
-    );
-
     return (
         <PluginContext.Provider
             value={
@@ -79,7 +57,7 @@ export function PluginProvider({
                           state: "ready",
                           plugins,
                           reloadPlugins: reload,
-                          loadExport,
+                          dependencies,
                       }
                     : { state: "loading" }
             }

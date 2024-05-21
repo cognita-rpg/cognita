@@ -1,9 +1,7 @@
 from typing import AsyncGenerator
-from litestar import Controller, MediaType, get
+from litestar import Controller, get
 from ..util import (
     PluginManifest,
-    PluginManifest_Metadata,
-    PluginManifest_ExportEntry,
     Context,
     Plugin,
 )
@@ -47,4 +45,10 @@ class PluginController(Controller):
         if not export in plugin.manifest.exports.keys():
             raise NotFoundException("error.api.plugin.export.unknown")
 
-        return Stream(read_export(plugin, export), media_type="text/javascript")
+        plug_export = plugin.manifest.exports.get(name)
+        if plug_export.type in ["function", "component"]:
+            return Stream(read_export(plugin, export), media_type="text/javascript")
+        elif plug_export.type == "asset":
+            return Stream(read_export(plugin, export), media_type=plug_export.mime_type)
+        else:
+            return Stream(read_export(plugin, export), media_type="application/json")

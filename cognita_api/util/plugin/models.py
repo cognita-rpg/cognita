@@ -1,3 +1,4 @@
+from typing import Literal
 from pydantic import BaseModel
 
 
@@ -10,11 +11,34 @@ class PluginManifest_Metadata(BaseModel):
     image: str | None = None
 
 
-class PluginManifest_ExportEntry(BaseModel):
+class PluginComponentExport(BaseModel):
+    type: Literal["component"] = "component"
     file: str
     function: str
 
 
+class PluginFunctionExport(BaseModel):
+    type: Literal["function"] = "function"
+    file: str
+    function: str
+
+
+class PluginAssetExport(BaseModel):
+    type: Literal["asset"] = "asset"
+    file: str
+    mime_type: str = "application/octet-stream"
+
+
+class PluginJSONExport(BaseModel):
+    type: Literal["json"] = "json"
+    file: str
+
+
+EXPORT_TYPES = (
+    PluginComponentExport | PluginFunctionExport | PluginAssetExport | PluginJSONExport
+)
+
+
 class PluginManifest(BaseModel):
     metadata: PluginManifest_Metadata
-    exports: dict[str, PluginManifest_ExportEntry] = {}
+    exports: dict[str, EXPORT_TYPES] = {}

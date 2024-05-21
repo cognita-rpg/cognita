@@ -6,6 +6,10 @@ from .plugin import (
     Plugin,
     PluginLoader,
     PluginManifest,
-    PluginManifest_ExportEntry,
     PluginManifest_Metadata,
+    PluginFunctionExport,
+    PluginAssetExport,
+    PluginComponentExport,
+    PluginJSONExport,
+    EXPORT_TYPES,
 )
