@@ -13,6 +13,7 @@ import {
 } from "./types";
 import { Session, User } from "../../types/auth";
 import { BaseAPIMethods, APIMixin, AuthMixin, PluginMixin } from "./methods";
+import { UnionToIntersection, ValuesType } from "utility-types";
 
 export function useApi(): ApiContextModel {
     const context = useContext(ApiContext);
@@ -54,9 +55,10 @@ export function useUser(): User | null {
     }
 }
 
-export function useApiMethods<TMixins extends APIMixin<any, any>>(
-    ...mixins: TMixins[]
-): typeof BaseAPIMethods & ReturnType<TMixins>["prototype"] {
+export function useApiMethods<TMixins extends APIMixin<any, any>[]>(
+    ...mixins: TMixins
+): typeof BaseAPIMethods &
+    UnionToIntersection<ReturnType<ValuesType<TMixins>>["prototype"]> {
     const api = useApi();
     const [methods, setMethods] = useState(
         new (mixins.reduce((prev, current) => current(prev), BaseAPIMethods))(

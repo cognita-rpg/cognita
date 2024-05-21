@@ -1,7 +1,8 @@
-from typing import Any, Type, TypeVar
+from typing import Any, ClassVar, Type, TypeVar
 from enum import StrEnum
 from .base import BaseObject
 from .auth import User, Session
+from ..util.plugin import Plugin
 
 
 class EntityType(StrEnum):
@@ -11,6 +12,7 @@ class EntityType(StrEnum):
     ENTITY = "entity"
     SESSION = "session"
     SCENE = "scene"
+    PLUGIN = "plugin"
 
 
 class EntityRelation(StrEnum):
@@ -20,11 +22,12 @@ class EntityRelation(StrEnum):
 
 
 TData = TypeVar("TData")
-TEntity = TypeVar("TEntity", bound=BaseObject)
-TEntityOther = TypeVar("TEntityOther", bound=BaseObject)
+TEntity = TypeVar("TEntity")
+TEntityOther = TypeVar("TEntityOther")
 
 
 class EntityLink[TData](BaseObject):
+    context: ClassVar[Any] = None
     source_type: EntityType
     source_id: str
     target_type: EntityType
@@ -34,6 +37,10 @@ class EntityLink[TData](BaseObject):
 
     class Settings:
         name = "entity_link"
+
+    @classmethod
+    def _initialize(cls: Type["EntityLink[TData]"], context: Any) -> None:
+        cls.context = context
 
     @classmethod
     async def get_links(
@@ -68,6 +75,8 @@ class EntityLink[TData](BaseObject):
                 return await Session.get(entity_id)
             case EntityType.USER:
                 return await User.get(entity_id)
+            case EntityType.PLUGIN:
+                return self.context.plugins.get(entity_id)
             case _:
                 raise NotImplementedError
 
@@ -79,6 +88,8 @@ class EntityLink[TData](BaseObject):
                 return await Session.get(entity_id)
             case EntityType.USER:
                 return await User.get(entity_id)
+            case EntityType.PLUGIN:
+                return self.context.plugins.get(entity_id)
             case _:
                 raise NotImplementedError
 
@@ -92,13 +103,15 @@ class EntityLink[TData](BaseObject):
         type: EntityRelation = EntityRelation.LINK,
         data: TData | None = None,
     ) -> "EntityLink[TData]":
-        source_id = source.id
-        target_id = target.id
+        source_id = source.metadata.slug if isinstance(source, Plugin) else source.id
+        target_id = target.metadata.slug if isinstance(target, Plugin) else target.id
 
         if isinstance(source, Session):
             source_type = EntityType.SESSION
         elif isinstance(source, User):
             source_type = EntityType.USER
+        elif isinstance(source, Plugin):
+            source_type = EntityType.PLUGIN
         else:
             raise NotImplementedError
 
@@ -106,6 +119,8 @@ class EntityLink[TData](BaseObject):
             target_type = EntityType.SESSION
         elif isinstance(target, User):
             target_type = EntityType.USER
+        elif isinstance(target, Plugin):
+            target_type = EntityType.PLUGIN
         else:
             raise NotImplementedError
 

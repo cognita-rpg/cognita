@@ -29,6 +29,7 @@ class Context:
         self.plugins = PluginLoader(self.config)
 
     async def initialize(self):
+        EntityLink._initialize(self)
         await init_beanie(
             database=self.mongo_database, document_models=[Session, User, EntityLink]
         )
