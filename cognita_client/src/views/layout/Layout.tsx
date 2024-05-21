@@ -80,7 +80,7 @@ export function Layout() {
                                 variant="subtle"
                                 justify="space-between"
                             >
-                                {t("views.layout.nav.projects")}
+                                {t("views.layout.nav.collections")}
                             </Button>
                             <Button
                                 leftSection={<IconBooks size={20} />}
@@ -152,7 +152,7 @@ export function Layout() {
                                     variant="subtle"
                                     justify="space-between"
                                 >
-                                    {t("views.layout.nav.projects")}
+                                    {t("views.layout.nav.collections")}
                                 </Button>
                                 <Button
                                     size="lg"

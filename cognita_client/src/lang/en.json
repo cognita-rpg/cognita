@@ -30,13 +30,13 @@
     },
     "layout": {
       "nav": {
-        "home": "Home",
-        "projects": "Projects",
-        "compendium": "Compendium",
-        "user_actions": {
-          "settings": "User Settings",
-          "logout": "Log Out"
-        }
+          "home": "Home",
+          "collections": "Collections",
+          "compendium": "Compendium",
+          "user_actions": {
+              "settings": "User Settings",
+              "logout": "Log Out"
+          }
       }
     }
   },
