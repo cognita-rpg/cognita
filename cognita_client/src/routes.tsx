@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Layout } from "./views/layout/Layout";
 import { AuthenticationView } from "./views/auth/AuthView";
+import { CollectionsView } from "./views/collections/CollectionsView";
 
 export const appRouter = createBrowserRouter([
     {
@@ -13,7 +14,7 @@ export const appRouter = createBrowserRouter([
             },
             {
                 path: "/collections/*",
-                element: <></>,
+                element: <CollectionsView />,
             },
             {
                 path: "/compendium/*",

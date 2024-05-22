@@ -15,3 +15,14 @@
         }
     }
 }
+
+.app-main {
+    position: absolute;
+    top: 48px;
+    left: 0px;
+    display: inline-block;
+    width: 100%;
+    height: calc(100vh - 48px);
+    box-sizing: border-box;
+    min-height: 0px !important;
+}

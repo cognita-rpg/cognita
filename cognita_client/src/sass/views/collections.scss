@@ -1,0 +1,14 @@
+.collections-main {
+    height: 100%;
+    position: relative;
+
+    .collections-scroll {
+        height: 100%;
+    }
+
+    .add-item-button {
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+    }
+}

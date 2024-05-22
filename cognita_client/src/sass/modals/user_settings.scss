@@ -28,3 +28,22 @@
         }
     }
 }
+
+.user-settings-tabs {
+    .user-settings-panel {
+        .user-settings-scroll {
+            max-height: calc(100vh - 2 * (var(--modal-y-offset)) - 120px);
+            padding-bottom: 12px;
+            border-radius: 4px;
+
+            .mantine-ScrollArea-viewport {
+                max-height: calc(100vh - 2 * (var(--modal-y-offset)) - 120px);
+            }
+        }
+    }
+}
+
+.user-settings-body {
+    height: calc(100dvh - 2 * var(--modal-y-offset) - 60px);
+    overflow-y: hidden;
+}

@@ -17,7 +17,7 @@ function useModal<TProps = any>({
     subtitle?: string;
     icon?: ReactNode;
     renderer: (props: ModalContentProps<TProps>) => ReactNode;
-    modalSettings?: any;
+    modalSettings?: Partial<Parameters<typeof modals.open>[0]>;
 }): (props?: TProps & { onEvent?: EventTrigger }) => void {
     const RenderElement: any = renderer;
     const activateModal = useCallback(
@@ -62,6 +62,9 @@ export function useModals() {
         renderer: UserSettingsModal,
         modalSettings: {
             size: "xl",
+            classNames: {
+                body: "user-settings-body",
+            },
         },
     });
 
