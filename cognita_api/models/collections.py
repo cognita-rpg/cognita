@@ -8,6 +8,7 @@ class CollectionEntity(BaseObject):
     type: None = None
     name: str
     summary: str | None = None
+    tags: list[str] = []
 
     class Settings:
         name = "entities"

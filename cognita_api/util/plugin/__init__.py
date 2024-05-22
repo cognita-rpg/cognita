@@ -13,6 +13,7 @@ from .models import (
     PluginArticleTemplateFeature,
     PluginCompendiumTemplateFeature,
     EXPORT_TYPES,
+    FEATURE_TYPES,
 )
 
 from ...models.links import EntityLink, EntityRelation

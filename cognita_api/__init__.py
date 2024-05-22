@@ -39,7 +39,13 @@ def plain_text_exception_handler(request: Request, exc: Exception) -> Response:
 
 
 app = Litestar(
-    route_handlers=[get_state, AuthController, PluginController, UserSelfController],
+    route_handlers=[
+        get_state,
+        AuthController,
+        PluginController,
+        UserSelfController,
+        CollectionFileController,
+    ],
     dependencies={
         "context": Provide(depends_context),
         "session": Provide(provide_session),

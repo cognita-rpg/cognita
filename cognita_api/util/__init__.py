@@ -14,4 +14,5 @@ from .plugin import (
     PluginArticleTemplateFeature,
     PluginCompendiumTemplateFeature,
     EXPORT_TYPES,
+    FEATURE_TYPES,
 )

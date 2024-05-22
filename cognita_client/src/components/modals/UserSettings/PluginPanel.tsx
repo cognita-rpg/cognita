@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useApiMethods } from "../../../util/api";
-import { PluginMixin } from "../../../util/api";
+import { PluginMixin, UserSelfMixin } from "../../../util/api";
 import { usePluginMap, usePluginReload } from "../../../util/plugin";
 import {
     ActionIcon,
@@ -25,7 +25,6 @@ import {
     IconVersions,
 } from "@tabler/icons-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { UserSelfMixin } from "../../../util/api/methods/userSelf";
 
 function PluginItem({
     manifest,

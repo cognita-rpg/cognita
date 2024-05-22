@@ -1,0 +1,32 @@
+.template-selector {
+    .template-list {
+        overflow-y: hidden;
+        position: relative;
+        max-height: 40vh;
+
+        .template-scroll {
+            max-height: calc(40vh - 24px);
+
+            .mantine-ScrollArea-viewport {
+                max-height: calc(40vh - 24px);
+            }
+        }
+    }
+
+    .feature-item {
+        cursor: pointer;
+        transition: background-color 0.1s;
+
+        &:hover {
+            background-color: var(--mantine-color-default-hover);
+        }
+
+        &.selected {
+            background-color: var(--mantine-primary-color-light);
+
+            &:hover {
+                background-color: var(--mantine-primary-color-light-hover);
+            }
+        }
+    }
+}

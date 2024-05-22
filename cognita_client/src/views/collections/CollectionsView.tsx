@@ -7,12 +7,14 @@ import {
     IconPlus,
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
+import { useModals } from "../../components/modals";
 
 export function CollectionsView() {
     const [itemAdd, { toggle: toggleItemAdd, close: closeItemAdd }] =
         useDisclosure(false);
     const itemsRef = useClickOutside(() => closeItemAdd());
     const { t } = useTranslation();
+    const { newCollectionFile } = useModals();
     return (
         <Box className="collections-main">
             <ScrollArea className="collections-scroll" p="sm"></ScrollArea>
@@ -46,6 +48,10 @@ export function CollectionsView() {
                                 size="lg"
                                 className="add-item-option"
                                 variant="light"
+                                onClick={() => {
+                                    newCollectionFile();
+                                    closeItemAdd();
+                                }}
                             >
                                 <IconFileText size={20} />
                             </ActionIcon>

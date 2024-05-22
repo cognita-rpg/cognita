@@ -12,7 +12,14 @@ import {
     isSuccess,
 } from "./types";
 import { Session, User } from "../../types/auth";
-import { BaseAPIMethods, APIMixin, AuthMixin, PluginMixin } from "./methods";
+import {
+    BaseAPIMethods,
+    APIMixin,
+    AuthMixin,
+    PluginMixin,
+    UserSelfMixin,
+    CollectionFilesMixin,
+} from "./methods";
 import { UnionToIntersection, ValuesType } from "utility-types";
 
 export function useApi(): ApiContextModel {
@@ -86,6 +93,8 @@ export {
     BaseAPIMethods,
     AuthMixin,
     PluginMixin,
+    UserSelfMixin,
+    CollectionFilesMixin,
 };
 export type {
     ApiContextModel,

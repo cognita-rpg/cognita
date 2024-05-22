@@ -69,3 +69,9 @@ export type PluginManifest = {
     exports: { [key: string]: PluginExport };
     features: PluginFeature[];
 };
+
+export type PluginFeatureReference<TFeature extends PluginFeature> = {
+    plugin_info: PluginMetadata;
+    exports: { [key: string]: PluginExport };
+    feature: TFeature;
+};
