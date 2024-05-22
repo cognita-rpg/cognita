@@ -31,5 +31,14 @@ class Context:
     async def initialize(self):
         EntityLink._initialize(self)
         await init_beanie(
-            database=self.mongo_database, document_models=[Session, User, EntityLink]
+            database=self.mongo_database,
+            document_models=[
+                Session,
+                User,
+                EntityLink,
+                ImageEntity,
+                FolderEntity,
+                FileEntity,
+                CollectionEntity,
+            ],
         )

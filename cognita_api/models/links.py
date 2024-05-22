@@ -73,9 +73,9 @@ class EntityLink(BaseObject):
         entity_id = self.source_id
         match entity_type:
             case EntityType.SESSION:
-                return await Session.get(entity_id)
+                return await Session.get(entity_id, with_children=True)
             case EntityType.USER:
-                return await User.get(entity_id)
+                return await User.get(entity_id, with_children=True)
             case EntityType.PLUGIN:
                 return self.context.plugins.get(entity_id)
             case _:
@@ -86,9 +86,9 @@ class EntityLink(BaseObject):
         entity_id = self.target_id
         match entity_type:
             case EntityType.SESSION:
-                return await Session.get(entity_id)
+                return await Session.get(entity_id, with_children=True)
             case EntityType.USER:
-                return await User.get(entity_id)
+                return await User.get(entity_id, with_children=True)
             case EntityType.PLUGIN:
                 return self.context.plugins.get(entity_id)
             case _:
