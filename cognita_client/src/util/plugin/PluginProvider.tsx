@@ -5,6 +5,7 @@ import * as reactDom from "react-dom";
 import * as mantineCore from "@mantine/core";
 import * as mantineHooks from "@mantine/hooks";
 import * as mantineForm from "@mantine/form";
+import * as cognitaSdk from "cognita-sdk";
 import { PluginContext } from "./types";
 import { useApiMethods, useApiState } from "../api";
 import { PluginMixin } from "../api/methods";
@@ -24,6 +25,7 @@ export function PluginProvider({
                 "@mantine/core": mantineCore,
                 "@mantine/hooks": mantineHooks,
                 "@mantine/form": mantineForm,
+                "cognita-sdk": cognitaSdk,
             }),
         []
     );
