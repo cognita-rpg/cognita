@@ -38,6 +38,13 @@
           "logout": "Log Out"
         }
       }
+    },
+    "collections": {
+      "add_item": {
+        "folder": "New Folder",
+        "file": "New File",
+        "image": "New Image"
+      }
     }
   },
   "error": {

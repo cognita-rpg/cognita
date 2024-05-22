@@ -6,9 +6,29 @@
         height: 100%;
     }
 
-    .add-item-button {
+    .add-item-menu {
         position: absolute;
         bottom: 16px;
         right: 16px;
+
+        .add-item-button {
+            transition: transform 0.1s;
+        }
+
+        .add-item-items {
+            height: 0px;
+            overflow: hidden;
+        }
+
+        &.active {
+            .add-item-button {
+                transform: rotate(45deg);
+            }
+
+            .add-item-items {
+                height: fit-content;
+                overflow: visible;
+            }
+        }
     }
 }
