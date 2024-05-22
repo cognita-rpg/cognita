@@ -2,6 +2,7 @@ FROM node:21-alpine
 
 RUN mkdir -p /cognita/cognita_client /cognita/certs
 VOLUME /cognita/cognita_client
+VOLUME /cognita/cognita_client/node_modules/cognita-sdk
 EXPOSE 5173/tcp
 COPY ./cognita_client/package.json /cognita/cognita_client
 COPY ./certs /cognita/certs

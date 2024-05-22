@@ -25,6 +25,7 @@ services:
 
     volumes:
       - ./cognita_client:/cognita/cognita_client
+      - ../cognita-sdk/cognita-sdk:/cognita/cognita_client/node_modules/cognita-sdk
 
     depends_on:
       - api
