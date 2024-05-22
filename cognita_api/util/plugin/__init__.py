@@ -15,6 +15,9 @@ from .models import (
     EXPORT_TYPES,
 )
 
+from ...models.links import EntityLink, EntityRelation
+from typing import Any
+
 
 class Plugin:
     def __init__(self, plugin_folder: str):
@@ -41,6 +44,26 @@ class Plugin:
             os.path.join(self.folder, self.manifest.exports[name].file), "rb"
         ) as f:
             yield f
+
+    async def link_to(
+        self,
+        target: Any,
+        relation: EntityRelation = EntityRelation.LINK,
+        data: Any = None,
+    ) -> EntityLink:
+        new_link = EntityLink.create_link(self, target, relation=relation, data=data)
+        await new_link.save()
+        return new_link
+
+    async def get_links(
+        self,
+        target: Any | None = None,
+        relation: EntityRelation | None = None,
+        data: Any | None = None,
+    ) -> list[EntityLink]:
+        return await EntityLink.get_links(
+            self, target=target, relation_type=relation, data_query=data
+        )
 
 
 class PluginLoader:

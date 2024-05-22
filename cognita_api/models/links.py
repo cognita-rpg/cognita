@@ -1,20 +1,48 @@
+from inspect import isclass
+from secrets import token_urlsafe
 from typing import Any, ClassVar, Type, TypeVar
 from enum import StrEnum
 
+from beanie import Document
 from pydantic import Field
-from .base import BaseObject
-from .auth import User, Session
-from ..util.plugin import Plugin
 
 
 class EntityType(StrEnum):
     USER = "user"
     GROUP = "group"
-    FOLDER = "folder"
     ENTITY = "entity"
     SESSION = "session"
     SCENE = "scene"
     PLUGIN = "plugin"
+
+    @classmethod
+    def from_type(cls: "EntityType", entity: Any) -> "EntityType | None":
+        if hasattr(entity, "__name__"):
+            name = entity.__name__
+        else:
+            name = entity.__class__.__name__
+
+        match name:
+            case "User":
+                return EntityType.USER
+            case "Group":
+                return EntityType.GROUP
+            case "Session":
+                return EntityType.SESSION
+            case "Scene":
+                return EntityType.SCENE
+            case "Plugin":
+                return EntityType.PLUGIN
+            case "CollectionEntity":
+                return EntityType.ENTITY
+            case "FolderEntity":
+                return EntityType.ENTITY
+            case "FileEntity":
+                return EntityType.ENTITY
+            case "ImageEntity":
+                return EntityType.ENTITY
+            case _:
+                return None
 
 
 class EntityRelation(StrEnum):
@@ -27,7 +55,8 @@ TEntity = TypeVar("TEntity")
 TEntityOther = TypeVar("TEntityOther")
 
 
-class EntityLink(BaseObject):
+class EntityLink(Document):
+    id: str = Field(default_factory=lambda: token_urlsafe())
     context: ClassVar[Any] = None
     source_type: EntityType
     source_id: str
@@ -46,13 +75,38 @@ class EntityLink(BaseObject):
     @classmethod
     async def get_links(
         cls: Type["EntityLink"],
-        source_id: str,
-        source_type: EntityType | None = None,
-        relation_type: EntityRelation | None = None,
-        target_id: str | None = None,
-        target_type: EntityType | None = None,
+        source: Any,
+        target: Any | None = None,
+        relation_type: EntityRelation = EntityRelation.LINK,
         data_query: Any | None = None,
     ) -> list["EntityLink"]:
+        source_type = EntityType.from_type(source)
+        if source_type == None:
+            raise ValueError("Unknown source type")
+
+        if not isclass(source):
+            if source_type == EntityType.PLUGIN:
+                source_id = source.metadata.slug
+            else:
+                source_id = source.id
+        else:
+            source_id = None
+
+        if target:
+            target_type = EntityType.from_type(target)
+            if target_type == None:
+                raise ValueError("Unknown target type")
+            if not isclass(target):
+                if target_type == EntityType.PLUGIN:
+                    target_id = target.metadata.slug
+                else:
+                    target_id = target.id
+            else:
+                target_id = None
+        else:
+            target_id = None
+            target_type = None
+
         query = {"source_id": source_id}
 
         if source_type:
@@ -68,66 +122,37 @@ class EntityLink(BaseObject):
 
         return await EntityLink.find(query).to_list()
 
-    async def source[TEntity](self) -> TEntity | None:
-        entity_type = self.source_type
-        entity_id = self.source_id
-        match entity_type:
-            case EntityType.SESSION:
-                return await Session.get(entity_id, with_children=True)
-            case EntityType.USER:
-                return await User.get(entity_id, with_children=True)
-            case EntityType.PLUGIN:
-                return self.context.plugins.get(entity_id)
-            case _:
-                raise NotImplementedError
-
-    async def target[TEntity](self) -> TEntity | None:
-        entity_type = self.target_type
-        entity_id = self.target_id
-        match entity_type:
-            case EntityType.SESSION:
-                return await Session.get(entity_id, with_children=True)
-            case EntityType.USER:
-                return await User.get(entity_id, with_children=True)
-            case EntityType.PLUGIN:
-                return self.context.plugins.get(entity_id)
-            case _:
-                raise NotImplementedError
-
     @classmethod
     def create_link(
         cls: Type["EntityLink"],
-        source: TEntity,
-        target: TEntityOther,
-        type: EntityRelation = EntityRelation.LINK,
-        data: Any | None = None,
+        source: Any,
+        target: Any,
+        relation: EntityRelation = EntityRelation.LINK,
+        data: Any = None,
     ) -> "EntityLink":
-        source_id = source.metadata.slug if isinstance(source, Plugin) else source.id
-        target_id = target.metadata.slug if isinstance(target, Plugin) else target.id
-
-        if isinstance(source, Session):
-            source_type = EntityType.SESSION
-        elif isinstance(source, User):
-            source_type = EntityType.USER
-        elif isinstance(source, Plugin):
-            source_type = EntityType.PLUGIN
+        if isclass(source) or isclass(target):
+            raise ValueError("Source/target must be initialized")
+        source_type = EntityType.from_type(source)
+        if source_type == None:
+            raise ValueError("Unknown source type")
+        if source_type == EntityType.PLUGIN:
+            source_id = source.metadata.slug
         else:
-            raise NotImplementedError
+            source_id = source.id
 
-        if isinstance(target, Session):
-            target_type = EntityType.SESSION
-        elif isinstance(target, User):
-            target_type = EntityType.USER
-        elif isinstance(target, Plugin):
-            target_type = EntityType.PLUGIN
+        target_type = EntityType.from_type(target)
+        if target_type == None:
+            raise ValueError("Unknown target type")
+        if target_type == EntityType.PLUGIN:
+            target_id = target.metadata.slug
         else:
-            raise NotImplementedError
+            target_id = target.id
 
         return EntityLink(
             source_id=source_id,
             source_type=source_type,
             target_id=target_id,
             target_type=target_type,
-            relation=type,
+            relation=relation,
             data=data,
         )

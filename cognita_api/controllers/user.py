@@ -1,7 +1,7 @@
 from litestar import Controller, get, post
 from litestar.di import Provide
 from litestar.exceptions import *
-from ..util import guard_user, provide_user, Context, PluginManifest
+from ..util import guard_user, provide_user, Context, PluginManifest, Plugin
 from ..models import User, Session, RedactedUser, EntityLink, EntityType, EntityRelation
 
 
@@ -19,48 +19,40 @@ class UserSelfController(Controller):
         if not plugin in context.plugins.plugins.keys():
             raise NotFoundException("error.api.user.self.settings.plugin_not_found")
 
-        existing = await EntityLink.get_links(
-            user.id,
-            source_type=EntityType.USER,
-            target_id=plugin,
-            target_type=EntityType.PLUGIN,
-            relation_type=EntityRelation.LINK,
-            data_query={"type": "enabled"},
+        existing = await user.get_links(
+            target=context.plugins.get(plugin),
+            relation=EntityRelation.LINK,
+            data={"type": "enabled"},
         )
         if len(existing) > 0:
             return
 
-        new_link = EntityLink.create_link(
-            user, context.plugins.get(plugin), data={"type": "enabled"}
-        )
-        await new_link.save()
+        await user.link_to(context.plugins.get(plugin), data={"type": "enabled"})
 
     @post("/settings/plugins/{plugin:str}/disable")
     async def disable_plugin(self, user: User, plugin: str, context: Context) -> None:
         if not plugin in context.plugins.plugins.keys():
             raise NotFoundException("error.api.user.self.settings.plugin_not_found")
 
-        existing = await EntityLink.get_links(
-            user.id,
-            source_type=EntityType.USER,
-            target_id=plugin,
-            target_type=EntityType.PLUGIN,
-            relation_type=EntityRelation.LINK,
-            data_query={"type": "enabled"},
+        existing = await user.get_links(
+            target=context.plugins.get(plugin),
+            relation=EntityRelation.LINK,
+            data={"type": "enabled"},
         )
         if len(existing) > 0:
             for i in existing:
                 await i.delete()
 
     @get("/settings/plugins")
-    async def get_enabled_plugins(self, user: User) -> list[PluginManifest]:
-        links = await EntityLink.get_links(
-            user.id,
-            source_type=EntityType.USER,
-            target_type=EntityType.PLUGIN,
-            relation_type=EntityRelation.LINK,
-            data_query={"type": "enabled"},
+    async def get_enabled_plugins(
+        self, user: User, context: Context
+    ) -> list[PluginManifest]:
+        links = await user.get_links(
+            target=Plugin, relation=EntityRelation.LINK, data={"type": "enabled"}
         )
-
-        enabled_plugins = [await link.target() for link in links]
-        return [i.manifest for i in enabled_plugins]
+        enabled = [
+            context.plugins.get(link.target_id).manifest
+            for link in links
+            if context.plugins.get(link.target_id)
+        ]
+        return enabled
