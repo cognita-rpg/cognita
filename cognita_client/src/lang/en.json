@@ -108,7 +108,9 @@
             "no_desc": "No Description"
           }
         }
-      }
+      },
+      "success": "Created file!",
+      "error": "Unable to create file."
     }
   }
 }

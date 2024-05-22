@@ -1,3 +1,4 @@
+import { CollectionFileEntity } from "../../../../types/collections";
 import {
     PluginArticleTemplateFeature,
     PluginFeatureReference,
@@ -18,6 +19,31 @@ export function CollectionFilesMixin<TBase extends Constructor<BaseAPIMethods>>(
                 return result.data;
             } else {
                 return [];
+            }
+        }
+
+        public async create_file(
+            name: string,
+            tags: string[],
+            summary: string,
+            template: PluginFeatureReference<PluginArticleTemplateFeature>
+        ): Promise<CollectionFileEntity | null> {
+            const result = await this.request<CollectionFileEntity>(
+                "/collections/files/new",
+                {
+                    method: "POST",
+                    body: {
+                        name,
+                        summary,
+                        tags,
+                        template,
+                    },
+                }
+            );
+            if (result.success) {
+                return result.data;
+            } else {
+                return null;
             }
         }
     };

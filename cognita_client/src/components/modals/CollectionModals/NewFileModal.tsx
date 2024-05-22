@@ -37,6 +37,7 @@ import {
 } from "@tabler/icons-react";
 import { DynamicIcon } from "../../DynamicIcon";
 import { EventTrigger } from "../types";
+import { useNotifs } from "../../../util/notifications";
 
 function FeatureItem({
     feature,
@@ -184,6 +185,8 @@ export function NewFileModal({ trigger }: { trigger: EventTrigger }) {
                         .includes(textSearch.toLowerCase()))
         );
     }, [searchConstraints, textSearch, templates]);
+
+    const { error, success } = useNotifs();
 
     return (
         <form
@@ -341,6 +344,23 @@ export function NewFileModal({ trigger }: { trigger: EventTrigger }) {
                         disabled={
                             form.values.name.length === 0 ||
                             form.values.template === null
+                        }
+                        onClick={() =>
+                            api
+                                .create_file(
+                                    form.values.name,
+                                    form.values.tags,
+                                    form.values.summary,
+                                    form.values.template as any
+                                )
+                                .then((result) => {
+                                    if (result) {
+                                        success(t("modals.newFile.success"));
+                                        trigger("close");
+                                    } else {
+                                        error(t("modals.newFile.error"));
+                                    }
+                                })
                         }
                     >
                         {t("common.action.create")}
