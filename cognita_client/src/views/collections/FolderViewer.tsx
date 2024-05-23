@@ -29,11 +29,18 @@ import { useModals } from "../../components/modals";
 import { CollectionsMixin, useApiMethods } from "../../util/api";
 import { useEffect, useState } from "react";
 import { DynamicIcon } from "../../components/DynamicIcon";
+import { useNavigate } from "react-router-dom";
 
 function FolderItem({ entity }: { entity: ReducedEntity }) {
     const { t } = useTranslation();
+    const nav = useNavigate();
     return (
-        <Paper className="folder-item" p="xs" radius="sm">
+        <Paper
+            className="folder-item"
+            p="xs"
+            radius="sm"
+            onClick={() => nav(`/collections/${entity.id}`)}
+        >
             <Stack gap="xs">
                 <Group justify="space-between" gap="xs">
                     {entity.type === "folder" && entity.icon ? (

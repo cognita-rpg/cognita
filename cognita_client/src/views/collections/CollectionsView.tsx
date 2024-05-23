@@ -45,7 +45,12 @@ export function CollectionsView() {
         <Box className="entity-viewer">
             <Stack gap={0} className="entity-viewer-stack">
                 <Group gap="sm" p="xs" wrap="nowrap">
-                    <ActionIcon radius="sm" size="lg" variant="light">
+                    <ActionIcon
+                        radius="sm"
+                        size="lg"
+                        variant="light"
+                        onClick={() => nav("/collections")}
+                    >
                         <IconHomeFilled size={20} />
                     </ActionIcon>
                     <Paper className="entity-path" radius="sm" withBorder>
