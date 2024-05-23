@@ -45,6 +45,7 @@ app = Litestar(
         PluginController,
         UserSelfController,
         CollectionsController,
+        EntityController,
     ],
     dependencies={
         "context": Provide(depends_context),

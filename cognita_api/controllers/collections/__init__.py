@@ -1,4 +1,4 @@
-from typing import Literal, Optional
+from typing import Any, Literal, Optional
 from litestar import Controller, get, post
 from litestar.di import Provide
 from litestar.exceptions import *
@@ -31,6 +31,7 @@ class EntityCreationModel(BaseModel):
 
 
 class ReducedEntity(BaseModel):
+    id: str
     type: Literal["file", "folder", "image"]
     name: str
     summary: str
@@ -172,3 +173,29 @@ class CollectionsController(Controller):
                 In(CollectionEntity.id, constrained), with_children=True
             ).to_list()
         ]
+
+
+async def provide_entity(user: User, id: str) -> COLLECTION_ENTITY:
+    links = await user.get_links(
+        target=CollectionEntity,
+        relation=EntityRelation.LINK,
+        query={"data.type": "access"},
+    )
+    if not id in [l.target_id for l in links]:
+        raise NotFoundException("error.api.collection.unknown_entity")
+    return await CollectionEntity.get(id)
+
+
+class EntityController(Controller):
+    path = "/collections/{id:str}"
+    guards = [guard_user]
+    dependencies = {"user": Provide(provide_user), "entity": Provide(provide_entity)}
+
+    @get("/")
+    async def get_entity(self, entity: Any) -> COLLECTION_ENTITY:
+        return entity
+
+    @get("/path")
+    async def get_entity_path(self, entity: Any) -> list[ReducedEntity]:
+        entity: COLLECTION_ENTITY = entity
+        return [ReducedEntity.from_entity(ent) for ent in await entity.get_path()]

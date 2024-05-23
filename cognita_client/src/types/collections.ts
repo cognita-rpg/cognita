@@ -54,3 +54,5 @@ export type EntityCreate =
     | CollectionFileEntityCreate
     | CollectionFolderEntityCreate
     | CollectionImageEntityCreate;
+
+export type ReducedEntity = Omit<EntityCreate, "parent"> & { id: string };

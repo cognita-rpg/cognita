@@ -1,4 +1,8 @@
-import { CollectionEntity, EntityCreate } from "../../../../types/collections";
+import {
+    CollectionEntity,
+    EntityCreate,
+    ReducedEntity,
+} from "../../../../types/collections";
 import {
     PluginArticleTemplateFeature,
     PluginFeatureReference,
@@ -28,6 +32,28 @@ export function CollectionsMixin<TBase extends Constructor<BaseAPIMethods>>(
             const result = await this.request<CollectionEntity>(
                 "/collections/new",
                 { method: "POST", body: options }
+            );
+            if (result.success) {
+                return result.data;
+            } else {
+                return null;
+            }
+        }
+
+        public async get_entities(parent?: string): Promise<ReducedEntity[]> {
+            const result = await this.request<ReducedEntity[]>("/collections", {
+                params: parent ? { parent } : undefined,
+            });
+            if (result.success) {
+                return result.data;
+            } else {
+                return [];
+            }
+        }
+
+        public async get_entity(id: string): Promise<CollectionEntity | null> {
+            const result = await this.request<CollectionEntity>(
+                `/collections/${id}`
             );
             if (result.success) {
                 return result.data;
