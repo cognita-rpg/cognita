@@ -70,7 +70,10 @@
         "empty": "Field cannot be empty"
       }
     },
-    "unknown": "Unknown error"
+    "unknown": "Unknown error",
+    "plugin": {
+      "render": "Error rendering content: {{plugin}} : {{exported}}"
+    }
   },
   "modals": {
     "user_settings": {
