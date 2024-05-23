@@ -48,6 +48,12 @@
         "folder": "New Folder",
         "file": "New File",
         "image": "New Image"
+      },
+      "item": {
+        "no_summary": "No summary provided.",
+        "summary": "Summary",
+        "tags": "Tags",
+        "no_tags": "No tags provided."
       }
     }
   },

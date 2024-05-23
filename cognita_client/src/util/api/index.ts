@@ -21,6 +21,7 @@ import {
     CollectionsMixin,
 } from "./methods";
 import { UnionToIntersection, ValuesType } from "utility-types";
+import { clone } from "lodash";
 
 export function useApi(): ApiContextModel {
     const context = useContext(ApiContext);
@@ -77,7 +78,7 @@ export function useApiMethods<TMixins extends APIMixin<any, any>[]>(
         () =>
             setMethods((current) => {
                 current.context = api;
-                return current;
+                return clone(current);
             }),
         [api]
     );

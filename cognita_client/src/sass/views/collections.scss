@@ -1,9 +1,19 @@
-.collections-main {
+.folder-main {
     height: 100%;
     position: relative;
 
-    .collections-scroll {
+    .folder-scroll {
         height: 100%;
+
+        .folder-item {
+            background-color: var(--mantine-color-default);
+            transition: background-color 0.1s;
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--mantine-color-default-hover);
+            }
+        }
     }
 
     .add-item-menu {
@@ -29,6 +39,35 @@
                 height: fit-content;
                 overflow: visible;
             }
+        }
+    }
+}
+
+.entity-viewer {
+    height: 100%;
+
+    .entity-viewer-stack {
+        height: 100%;
+
+        .entity-path {
+            flex-grow: 1;
+            padding: 4px;
+            padding-left: 12px;
+            user-select: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .entity-content {
+            .entity-loader {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            
         }
     }
 }

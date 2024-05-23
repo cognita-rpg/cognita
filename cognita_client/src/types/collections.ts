@@ -1,6 +1,7 @@
 import { PluginArticleTemplateFeature, PluginFeatureReference } from "./plugin";
 
 interface CollectionEntityBase {
+    id: string;
     type: string;
     name: string;
     summary: string | null;
@@ -30,7 +31,7 @@ export type CollectionEntity =
     | CollectionFolderEntity
     | CollectionImageEntity;
 
-interface CollectionEntityCreate extends CollectionEntityBase {
+interface CollectionEntityCreate extends Omit<CollectionEntityBase, "id"> {
     parent: string | null;
 }
 
@@ -55,4 +56,16 @@ export type EntityCreate =
     | CollectionFolderEntityCreate
     | CollectionImageEntityCreate;
 
-export type ReducedEntity = Omit<EntityCreate, "parent"> & { id: string };
+export type ReducedEntity = {
+    id: string;
+    name: string;
+    summary: string | null;
+    tags: string[];
+} & (
+    | { type: "folder"; icon: string | null; color: string | null }
+    | { type: "image"; url: string }
+    | {
+          type: "file";
+          template: PluginFeatureReference<PluginArticleTemplateFeature>;
+      }
+);

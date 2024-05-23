@@ -3,7 +3,7 @@ import { Session, User } from "../../../types/auth";
 import { ApiContextModel, ApiResponse, RequestOptions } from "../types";
 
 export class BaseAPIMethods {
-    constructor(protected apiContext: ApiContextModel) {}
+    constructor(public apiContext: ApiContextModel) {}
 
     public set context(v: ApiContextModel) {
         this.apiContext = v;

@@ -14,11 +14,11 @@ export const appRouter = createBrowserRouter([
                 element: <HomeView />,
             },
             {
-                path: "/collections/*",
+                path: "/collections/:entityId?",
                 element: <CollectionsView />,
             },
             {
-                path: "/compendium/*",
+                path: "/compendium",
                 element: <></>,
             },
         ],
