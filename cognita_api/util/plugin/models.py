@@ -93,3 +93,38 @@ class PluginManifest(BaseModel):
     metadata: PluginManifest_Metadata
     exports: dict[str, EXPORT_TYPES] = {}
     features: list[FEATURE_TYPES] = []
+
+
+class PluginFeatureReference(BaseModel):
+    plugin_name: str
+    feature_name: str
+    plugin_info: PluginManifest_Metadata | None = None
+    exports: dict[str, EXPORT_TYPES] = {}
+    feature_info: FEATURE_TYPES | None = None
+
+    @classmethod
+    def from_feature(
+        cls, plugin: PluginManifest, feature: str
+    ) -> "PluginFeatureReference":
+        features = [i for i in plugin.features if i.name == feature]
+        if len(features) == 1:
+            feature_info = features[0]
+        else:
+            feature_info = None
+
+        if feature_info:
+            exports = {
+                i: plugin.exports[i]
+                for i in feature_info.required_exports
+                if i in plugin.exports.keys()
+            }
+        else:
+            exports = {}
+
+        return PluginFeatureReference(
+            plugin_name=plugin.metadata.slug,
+            feature_name=feature,
+            plugin_info=plugin.metadata,
+            exports=exports,
+            feature_info=feature_info,
+        )

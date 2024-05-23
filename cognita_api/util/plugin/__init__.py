@@ -12,6 +12,7 @@ from .models import (
     PluginFunctionExport,
     PluginArticleTemplateFeature,
     PluginCompendiumTemplateFeature,
+    PluginFeatureReference,
     EXPORT_TYPES,
     FEATURE_TYPES,
 )

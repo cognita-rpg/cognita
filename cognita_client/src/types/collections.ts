@@ -1,3 +1,5 @@
+import { PluginArticleTemplateFeature, PluginFeatureReference } from "./plugin";
+
 interface CollectionEntityBase {
     type: string;
     name: string;
@@ -27,3 +29,28 @@ export type CollectionEntity =
     | CollectionFileEntity
     | CollectionFolderEntity
     | CollectionImageEntity;
+
+interface CollectionEntityCreate extends CollectionEntityBase {
+    parent: string | null;
+}
+
+export interface CollectionFolderEntityCreate extends CollectionEntityCreate {
+    type: "folder";
+    icon: string | null;
+    color: string | null;
+}
+
+export interface CollectionImageEntityCreate extends CollectionEntityCreate {
+    type: "image";
+    url: string;
+}
+
+export interface CollectionFileEntityCreate extends CollectionEntityCreate {
+    type: "file";
+    template: PluginFeatureReference<PluginArticleTemplateFeature>;
+}
+
+export type EntityCreate =
+    | CollectionFileEntityCreate
+    | CollectionFolderEntityCreate
+    | CollectionImageEntityCreate;

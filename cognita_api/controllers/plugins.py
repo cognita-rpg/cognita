@@ -1,10 +1,6 @@
 from typing import AsyncGenerator
 from litestar import Controller, get
-from ..util import (
-    PluginManifest,
-    Context,
-    Plugin,
-)
+from ..util import PluginManifest, Context, Plugin
 from litestar.exceptions import *
 from litestar.response import Stream
 

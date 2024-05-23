@@ -1,6 +1,7 @@
 from secrets import token_urlsafe
 from typing import Any
-from beanie import Document
+from beanie import Document, before_event, Delete
+from beanie.operators import Or
 from pydantic import Field
 from .links import EntityLink, EntityRelation
 
@@ -27,3 +28,9 @@ class BaseObject(Document):
         return await EntityLink.get_links(
             self, target=target, relation_type=relation, data_query=data
         )
+
+    @before_event(Delete)
+    async def clear_links(self):
+        await EntityLink.find(
+            Or(EntityLink.source_id == self.id, EntityLink.target_id == self.id)
+        ).delete()

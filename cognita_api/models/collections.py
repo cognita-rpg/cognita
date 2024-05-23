@@ -1,5 +1,6 @@
 from typing import Any, Literal, Type, TypeVar
 from .base import BaseObject
+from ..util.plugin import PluginFeatureReference
 
 TBase = TypeVar("TBase", bound="CollectionEntity")
 
@@ -21,7 +22,8 @@ class CollectionEntity(BaseObject):
 
 class FolderEntity(CollectionEntity):
     type: Literal["folder"] = "folder"
-    content: Any | None = None
+    color: str | None = None
+    icon: str | None = None
 
 
 class ImageEntity(CollectionEntity):
@@ -31,6 +33,7 @@ class ImageEntity(CollectionEntity):
 
 class FileEntity(CollectionEntity):
     type: Literal["file"] = "file"
-    template_plugin: str
-    template_name: str
+    template: PluginFeatureReference
     content: Any | None = None
+
+COLLECTION_ENTITY = FolderEntity | ImageEntity | FileEntity

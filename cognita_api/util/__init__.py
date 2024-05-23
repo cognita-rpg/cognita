@@ -13,6 +13,7 @@ from .plugin import (
     PluginJSONExport,
     PluginArticleTemplateFeature,
     PluginCompendiumTemplateFeature,
+    PluginFeatureReference,
     EXPORT_TYPES,
     FEATURE_TYPES,
 )

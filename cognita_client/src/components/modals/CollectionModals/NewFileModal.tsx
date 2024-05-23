@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { CollectionFilesMixin, useApiMethods } from "../../../util/api";
+import { CollectionsMixin, useApiMethods } from "../../../util/api";
 import { useEffect, useMemo, useState } from "react";
 import {
     PluginArticleTemplateFeature,
@@ -66,18 +66,18 @@ function FeatureItem({
         >
             <Stack gap="xs">
                 <Group gap="xs">
-                    {feature.feature.icon ? (
+                    {feature.feature_info.icon ? (
                         <DynamicIcon
-                            name={feature.feature.icon}
+                            name={feature.feature_info.icon}
                             fallback={IconTemplate}
                         />
                     ) : (
                         <IconTemplate />
                     )}
-                    <Text>{feature.feature.name}</Text>
+                    <Text>{feature.feature_info.name}</Text>
                 </Group>
                 <Text c="dimmed" size="sm">
-                    {feature.feature.description ??
+                    {feature.feature_info.description ??
                         t("modals.newFile.field.template.item.no_desc")}
                 </Text>
                 <Divider />
@@ -123,13 +123,13 @@ function FeatureItem({
 
 export function NewFileModal({ trigger }: { trigger: EventTrigger }) {
     const { t } = useTranslation();
-    const api = useApiMethods(CollectionFilesMixin);
+    const api = useApiMethods(CollectionsMixin);
 
     const [templates, setTemplates] = useState<
         PluginFeatureReference<PluginArticleTemplateFeature>[]
     >([]);
     useEffect(() => {
-        api.get_available_file_templates().then(setTemplates);
+        api.get_file_templates().then(setTemplates);
     }, []);
 
     const pluginNames = useMemo(
@@ -137,7 +137,7 @@ export function NewFileModal({ trigger }: { trigger: EventTrigger }) {
         [templates]
     );
     const pluginTags = useMemo(
-        () => uniq(flatten(templates.map((v) => v.feature.tags))),
+        () => uniq(flatten(templates.map((v) => v.feature_info.tags))),
         [templates]
     );
 
@@ -172,15 +172,17 @@ export function NewFileModal({ trigger }: { trigger: EventTrigger }) {
         return templates.filter(
             (template) =>
                 (constrainedTags.length === 0 ||
-                    intersection(constrainedTags, template.feature.tags)
+                    intersection(constrainedTags, template.feature_info.tags)
                         .length > 0) &&
                 (constrainedPlugins.length === 0 ||
                     constrainedPlugins.includes(template.plugin_info.name)) &&
                 (textSearch.length === 0 ||
                     textSearch
                         .toLowerCase()
-                        .includes(template.feature.name.toLowerCase()) ||
-                    template.feature.name
+                        .includes(
+                            template.feature_info.name.toLowerCase() ?? ""
+                        ) ||
+                    template.feature_info.name
                         .toLowerCase()
                         .includes(textSearch.toLowerCase()))
         );
@@ -306,9 +308,9 @@ export function NewFileModal({ trigger }: { trigger: EventTrigger }) {
                                             onDeselect={() => {
                                                 if (
                                                     form.values.template &&
-                                                    form.values.template.feature
-                                                        .name ===
-                                                        result.feature.name
+                                                    form.values.template
+                                                        .feature_info.name ===
+                                                        result.feature_info.name
                                                 ) {
                                                     form.setFieldValue(
                                                         "template",
@@ -319,8 +321,8 @@ export function NewFileModal({ trigger }: { trigger: EventTrigger }) {
                                             selected={
                                                 form.values.template
                                                     ? form.values.template
-                                                          .feature.name ===
-                                                      result.feature.name
+                                                          .feature_info.name ===
+                                                      result.feature_info.name
                                                     : false
                                             }
                                         />
@@ -347,12 +349,14 @@ export function NewFileModal({ trigger }: { trigger: EventTrigger }) {
                         }
                         onClick={() =>
                             api
-                                .create_file(
-                                    form.values.name,
-                                    form.values.tags,
-                                    form.values.summary,
-                                    form.values.template as any
-                                )
+                                .create_entity({
+                                    type: "file",
+                                    name: form.values.name,
+                                    summary: form.values.summary,
+                                    tags: form.values.tags,
+                                    parent: null,
+                                    template: form.values.template as any,
+                                })
                                 .then((result) => {
                                     if (result) {
                                         success(t("modals.newFile.success"));

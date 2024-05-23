@@ -18,7 +18,7 @@ import {
     AuthMixin,
     PluginMixin,
     UserSelfMixin,
-    CollectionFilesMixin,
+    CollectionsMixin,
 } from "./methods";
 import { UnionToIntersection, ValuesType } from "utility-types";
 
@@ -94,7 +94,7 @@ export {
     AuthMixin,
     PluginMixin,
     UserSelfMixin,
-    CollectionFilesMixin,
+    CollectionsMixin,
 };
 export type {
     ApiContextModel,

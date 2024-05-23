@@ -71,7 +71,9 @@ export type PluginManifest = {
 };
 
 export type PluginFeatureReference<TFeature extends PluginFeature> = {
+    plugin_name: string;
+    feature_name: string;
     plugin_info: PluginMetadata;
     exports: { [key: string]: PluginExport };
-    feature: TFeature;
+    feature_info: TFeature;
 };

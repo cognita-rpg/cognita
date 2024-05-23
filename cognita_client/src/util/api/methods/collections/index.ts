@@ -1,3 +1,39 @@
-import { CollectionFilesMixin } from "./files";
+import { CollectionEntity, EntityCreate } from "../../../../types/collections";
+import {
+    PluginArticleTemplateFeature,
+    PluginFeatureReference,
+} from "../../../../types/plugin";
+import { BaseAPIMethods, Constructor } from "../base";
 
-export { CollectionFilesMixin };
+export function CollectionsMixin<TBase extends Constructor<BaseAPIMethods>>(
+    base: TBase
+) {
+    return class CollectionsMethods extends base {
+        public async get_file_templates(): Promise<
+            PluginFeatureReference<PluginArticleTemplateFeature>[]
+        > {
+            const result = await this.request<
+                PluginFeatureReference<PluginArticleTemplateFeature>[]
+            >("/collections/file_templates");
+            if (result.success) {
+                return result.data;
+            } else {
+                return [];
+            }
+        }
+
+        public async create_entity(
+            options: EntityCreate
+        ): Promise<CollectionEntity | null> {
+            const result = await this.request<CollectionEntity>(
+                "/collections/new",
+                { method: "POST", body: options }
+            );
+            if (result.success) {
+                return result.data;
+            } else {
+                return null;
+            }
+        }
+    };
+}
