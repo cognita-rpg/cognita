@@ -1,5 +1,6 @@
 from litestar import Controller, get, post
 from litestar.di import Provide
+from litestar.exceptions import NotFoundException
 from pydantic import BaseModel
 from ...util import (
     guard_user,
@@ -82,3 +83,11 @@ class CollectionFileController(Controller):
     async def get_files(self, user: User) -> list[FileEntity]:
         links = await user.get_links(target=FileEntity, relation=EntityRelation.PARENT)
         return [await FileEntity.get(i.target_id) for i in links]
+
+    @get("/{id:str}")
+    async def get_file(self, user: User, id: str) -> FileEntity:
+        result = await FileEntity.get(id)
+        if not result:
+            raise NotFoundException()
+
+        return result

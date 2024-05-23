@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { Layout } from "./views/layout/Layout";
 import { AuthenticationView } from "./views/auth/AuthView";
 import { CollectionsView } from "./views/collections/CollectionsView";
+import { HomeView } from "./views/home/HomeView";
 
 export const appRouter = createBrowserRouter([
     {
@@ -10,7 +11,7 @@ export const appRouter = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <></>,
+                element: <HomeView />,
             },
             {
                 path: "/collections/*",

@@ -1,4 +1,3 @@
-import { createRequires } from "@paciolan/remote-module-loader";
 import * as react from "react";
 import * as reactJsx from "react/jsx-runtime";
 import * as reactDom from "react-dom";
@@ -17,16 +16,15 @@ export function PluginProvider({
     children?: react.ReactNode | react.ReactNode[];
 }) {
     const dependencies = react.useMemo(
-        () =>
-            createRequires({
-                react: react,
-                "react/jsx-runtime": reactJsx,
-                "react-dom": reactDom,
-                "@mantine/core": mantineCore,
-                "@mantine/hooks": mantineHooks,
-                "@mantine/form": mantineForm,
-                "cognita-sdk": cognitaSdk,
-            }),
+        () => ({
+            react: react,
+            "react/jsx-runtime": reactJsx,
+            "react-dom": reactDom,
+            "@mantine/core": mantineCore,
+            "@mantine/hooks": mantineHooks,
+            "@mantine/form": mantineForm,
+            "cognita-sdk": cognitaSdk,
+        }),
         []
     );
     const apiState = useApiState();

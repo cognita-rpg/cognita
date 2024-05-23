@@ -45,7 +45,7 @@ class PluginController(Controller):
         if not export in plugin.manifest.exports.keys():
             raise NotFoundException("error.api.plugin.export.unknown")
 
-        plug_export = plugin.manifest.exports.get(name)
+        plug_export = plugin.manifest.exports.get(export)
         if plug_export.type in ["function", "component"]:
             return Stream(read_export(plugin, export), media_type="text/javascript")
         elif plug_export.type == "asset":

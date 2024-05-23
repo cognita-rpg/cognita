@@ -6,7 +6,9 @@ import {
     FullExport,
 } from "./types";
 import { PluginExport, PluginManifest } from "../../types/plugin";
-import createLoadRemoteModule from "@paciolan/remote-module-loader";
+import createLoadRemoteModule, {
+    createRequires,
+} from "@paciolan/remote-module-loader";
 import { ApiContextModel, useApi } from "../api";
 
 export function usePlugins(): PluginContextType {
@@ -50,7 +52,9 @@ function getPluginExport<TExport extends PluginExport>(
 ): FullExport<TExport> {
     const loadRemoteModule =
         plugins.state === "ready"
-            ? createLoadRemoteModule(plugins.dependencies)
+            ? createLoadRemoteModule({
+                  requires: createRequires(plugins.dependencies),
+              })
             : async (..._: any[]) => {};
     const plugin =
         plugins.state === "ready" ? plugins.plugins[name] ?? null : null;

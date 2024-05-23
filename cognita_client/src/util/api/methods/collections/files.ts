@@ -46,5 +46,18 @@ export function CollectionFilesMixin<TBase extends Constructor<BaseAPIMethods>>(
                 return null;
             }
         }
+
+        public async get_file(
+            id: string
+        ): Promise<CollectionFileEntity | null> {
+            const result = await this.request<CollectionFileEntity>(
+                `/collections/files/${id}`
+            );
+            if (result.success) {
+                return result.data;
+            } else {
+                return null;
+            }
+        }
     };
 }

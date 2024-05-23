@@ -17,8 +17,8 @@ export function ExportedComponent<TProps extends object = any>({
     error?: (props: FallbackProps) => ReactNode;
 } & Partial<TProps>) {
     const [RenderElement, setRenderElement] = useState<
-        (props?: Partial<TProps>) => ReactNode
-    >(fallback ? fallback : () => <Loader />);
+        ((props?: Partial<TProps>) => ReactNode) | null
+    >(fallback ? fallback : null);
     const { t } = useTranslation();
     useEffect(() => {
         if (exported.resolver) {
@@ -26,13 +26,11 @@ export function ExportedComponent<TProps extends object = any>({
                 .resolver()
                 .then((result) =>
                     result
-                        ? setRenderElement(result)
-                        : setRenderElement(
-                              fallback ? fallback : () => <Loader />
-                          )
+                        ? setRenderElement(() => result)
+                        : setRenderElement(() => (fallback ? fallback : null))
                 );
         } else {
-            setRenderElement(fallback ? fallback : () => <Loader />);
+            setRenderElement(() => (fallback ? fallback : null));
         }
     }, [exported.resolver]);
 
@@ -56,7 +54,7 @@ export function ExportedComponent<TProps extends object = any>({
                       )
             }
         >
-            <RenderElement {...(props as any)} />
+            {RenderElement ? <RenderElement {...(props as any)} /> : <Loader />}
         </ErrorBoundary>
     );
 }
