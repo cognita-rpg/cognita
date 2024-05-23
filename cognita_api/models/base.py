@@ -23,10 +23,10 @@ class BaseObject(Document):
         self,
         target: Any | None = None,
         relation: EntityRelation | None = None,
-        data: Any | None = None,
+        query: dict[str, Any] | None = None,
     ) -> list[EntityLink]:
         return await EntityLink.get_links(
-            self, target=target, relation_type=relation, data_query=data
+            self, target=target, relation_type=relation, query=query
         )
 
     @before_event(Delete)

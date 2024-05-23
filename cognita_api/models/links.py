@@ -78,7 +78,7 @@ class EntityLink(Document):
         source: Any,
         target: Any | None = None,
         relation_type: EntityRelation = EntityRelation.LINK,
-        data_query: Any | None = None,
+        query: dict[str, Any] | None = None,
     ) -> list["EntityLink"]:
         source_type = EntityType.from_type(source)
         if source_type == None:
@@ -117,8 +117,9 @@ class EntityLink(Document):
             query["target_id"] = target_id
         if target_type:
             query["target_type"] = target_type
-        if data_query:
-            query["data"] = data_query
+        if query:
+            for key, value in query.items():
+                query[key] = value
 
         return await EntityLink.find(query).to_list()
 

@@ -22,7 +22,7 @@ class UserSelfController(Controller):
         existing = await user.get_links(
             target=context.plugins.get(plugin),
             relation=EntityRelation.LINK,
-            data={"type": "enabled"},
+            query={"data.type": "enabled"},
         )
         if len(existing) > 0:
             return
@@ -37,7 +37,7 @@ class UserSelfController(Controller):
         existing = await user.get_links(
             target=context.plugins.get(plugin),
             relation=EntityRelation.LINK,
-            data={"type": "enabled"},
+            query={"data.type": "enabled"},
         )
         if len(existing) > 0:
             for i in existing:
@@ -48,7 +48,7 @@ class UserSelfController(Controller):
         self, user: User, context: Context
     ) -> list[PluginManifest]:
         links = await user.get_links(
-            target=Plugin, relation=EntityRelation.LINK, data={"type": "enabled"}
+            target=Plugin, relation=EntityRelation.LINK, query={"data.type": "enabled"}
         )
         enabled = [
             context.plugins.get(link.target_id).manifest
