@@ -17,3 +17,4 @@ from .plugin import (
     EXPORT_TYPES,
     FEATURE_TYPES,
 )
+from .events import EventManager, Event, provide_events

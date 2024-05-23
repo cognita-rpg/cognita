@@ -39,6 +39,8 @@ class CookieSessionManager(MiddlewareProtocol):
                 await send(message)
 
             await self.app(scope, receive, send_wrapper)
+        else:
+            await self.app(scope, receive, send)
 
 
 async def provide_session(scope: Scope) -> Session:
