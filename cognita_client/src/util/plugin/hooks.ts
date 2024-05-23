@@ -137,6 +137,6 @@ export function usePluginExport(
         }
 
         return output;
-    }, [plugin, exports, plugins.state, api.state]);
+    }, [plugin, exports.length, plugins.state, api.state]);
     return results;
 }
