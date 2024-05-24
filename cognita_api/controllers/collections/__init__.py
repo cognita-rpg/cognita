@@ -4,7 +4,14 @@ from litestar.di import Provide
 from litestar.exceptions import *
 from pydantic import BaseModel
 from beanie.operators import In
-from ...util import provide_user, guard_user, PluginFeatureReference, Plugin, Context
+from ...util import (
+    provide_user,
+    guard_user,
+    PluginFeatureReference,
+    Plugin,
+    Context,
+    EventManager,
+)
 from ...models import (
     User,
     COLLECTION_ENTITY,
@@ -53,7 +60,7 @@ class CollectionsController(Controller):
 
     @post("/new")
     async def create_collection_entity(
-        self, user: User, data: EntityCreationModel
+        self, user: User, data: EntityCreationModel, events: EventManager
     ) -> COLLECTION_ENTITY:
         if data.parent:
             parent = await CollectionEntity.get(data.parent)
@@ -97,6 +104,7 @@ class CollectionsController(Controller):
         )
 
         await entity.save()
+        await events.publish("entity.create", entity, data={"parent": parent})
         return entity
 
     @get("/file_templates")

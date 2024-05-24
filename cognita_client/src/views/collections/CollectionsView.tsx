@@ -13,6 +13,7 @@ import {
 } from "@mantine/core";
 import { FolderViewer } from "./FolderViewer";
 import { IconHomeFilled } from "@tabler/icons-react";
+import { useEvent } from "../../util/events";
 
 export function CollectionsView() {
     const { entityId } = useParams<{ entityId?: string }>();
@@ -22,6 +23,7 @@ export function CollectionsView() {
     const [path, setPath] = useState<ReducedEntity[]>([]);
     const api = useApiMethods(CollectionsMixin);
     const nav = useNavigate();
+    useEvent("entity.create", console.log);
 
     useEffect(() => {
         if (entityId) {

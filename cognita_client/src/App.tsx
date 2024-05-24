@@ -10,6 +10,7 @@ import * as langEn from "./lang/en.json";
 import { ApiProvider } from "./util/api";
 import { useMemo } from "react";
 import { PluginProvider } from "./util/plugin/PluginProvider";
+import { EventsProvider } from "./util/events";
 
 function App() {
     const i18nInst = useMemo(() => {
@@ -48,20 +49,22 @@ function App() {
 
     return (
         <ApiProvider>
-            <MantineProvider
-                defaultColorScheme="dark"
-                theme={theme}
-                withCssVariables
-            >
-                <I18nextProvider i18n={i18nInst} defaultNS={"translation"}>
-                    <PluginProvider>
-                        <Notifications />
-                        <ModalsProvider>
-                            <RouterProvider router={appRouter} />
-                        </ModalsProvider>
-                    </PluginProvider>
-                </I18nextProvider>
-            </MantineProvider>
+            <EventsProvider>
+                <MantineProvider
+                    defaultColorScheme="dark"
+                    theme={theme}
+                    withCssVariables
+                >
+                    <I18nextProvider i18n={i18nInst} defaultNS={"translation"}>
+                        <PluginProvider>
+                            <Notifications />
+                            <ModalsProvider>
+                                <RouterProvider router={appRouter} />
+                            </ModalsProvider>
+                        </PluginProvider>
+                    </I18nextProvider>
+                </MantineProvider>
+            </EventsProvider>
         </ApiProvider>
     );
 }

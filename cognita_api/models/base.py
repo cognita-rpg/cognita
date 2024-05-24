@@ -3,7 +3,7 @@ from typing import Any
 from beanie import Document, before_event, Delete
 from beanie.operators import Or
 from pydantic import Field
-from .links import EntityLink, EntityRelation
+from .links import EntityLink, EntityRelation, EntityType
 
 
 class BaseObject(Document):

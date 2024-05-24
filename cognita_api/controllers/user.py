@@ -1,7 +1,15 @@
+from typing import Any
 from litestar import Controller, get, post
 from litestar.di import Provide
 from litestar.exceptions import *
-from ..util import guard_user, provide_user, Context, PluginManifest, Plugin
+from ..util import (
+    guard_user,
+    provide_user,
+    Context,
+    PluginManifest,
+    Plugin,
+    EventManager,
+)
 from ..models import User, Session, RedactedUser, EntityLink, EntityType, EntityRelation
 
 
@@ -11,7 +19,8 @@ class UserSelfController(Controller):
     dependencies = {"user": Provide(provide_user)}
 
     @get("/")
-    async def get_current_user(self, user: User) -> RedactedUser:
+    async def get_current_user(self, user: User, events: EventManager) -> RedactedUser:
+        await events.publish("test", user)
         return user.redacted
 
     @post("/settings/plugins/{plugin:str}/enable")

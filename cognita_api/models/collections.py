@@ -38,6 +38,18 @@ class CollectionEntity(BaseObject):
             else:
                 return results
 
+    @classmethod
+    def get_factory(
+        cls, type: Literal["folder", "image", "file"]
+    ) -> "FolderEntity | ImageEntity | FileEntity":
+        match type:
+            case "file":
+                return FileEntity
+            case "folder":
+                return FolderEntity
+            case "image":
+                return ImageEntity
+
 
 class FolderEntity(CollectionEntity):
     type: Literal["folder"] = "folder"
