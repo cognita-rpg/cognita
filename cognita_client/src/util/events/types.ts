@@ -19,10 +19,3 @@ export const EventContext = createContext<EventContextType>({
     registerListener: () => {},
     deregisterListener: () => {},
 });
-
-export type ListenerState = {
-    [key: string]: { [key: string]: (data: any) => void };
-};
-export type ListenerUpdate =
-    | { action: "add"; id: string; type: string; callback: (data: any) => void }
-    | { action: "remove"; id: string };

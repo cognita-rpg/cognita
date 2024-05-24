@@ -27,9 +27,10 @@ import { useTranslation } from "react-i18next";
 import { CollectionEntity, ReducedEntity } from "../../types/collections";
 import { useModals } from "../../components/modals";
 import { CollectionsMixin, useApiMethods } from "../../util/api";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DynamicIcon } from "../../components/DynamicIcon";
 import { useNavigate } from "react-router-dom";
+import { useEvent } from "../../util/events";
 
 function FolderItem({ entity }: { entity: ReducedEntity }) {
     const { t } = useTranslation();
@@ -143,11 +144,15 @@ export function FolderViewer({ entity }: { entity: CollectionEntity | null }) {
     const api = useApiMethods(CollectionsMixin);
 
     const [children, setChildren] = useState<ReducedEntity[]>([]);
-
-    useEffect(() => {
+    const loadEntities = useCallback(() => {
         if (api.state === "ready") {
             api.get_entities(entity?.id).then(setChildren);
         }
+    }, [api.state]);
+    useEvent("entity.create", loadEntities);
+
+    useEffect(() => {
+        loadEntities();
     }, [api.state]);
 
     return (
