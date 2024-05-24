@@ -120,6 +120,16 @@
       },
       "success": "Created file!",
       "error": "Unable to create file."
+    },
+    "newFolder": {
+      "field": {
+        "name": "Folder Name",
+        "tags": "Tags",
+        "summary": "Summary"
+      },
+      "success": "Created folder!",
+      "error": "Unable to create folder.",
+      "title": "New Folder"
     }
   }
 }

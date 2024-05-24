@@ -3,10 +3,11 @@ import { ModalContentProps, EventTrigger, ModalEvent } from "./types";
 import { modals } from "@mantine/modals";
 import { Group, Stack, Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconFilePlus, IconUserCog } from "@tabler/icons-react";
+import { IconFilePlus, IconFolderPlus, IconUserCog } from "@tabler/icons-react";
 import { UserSettingsModal } from "./UserSettings";
 import { NewFileModal } from "./CollectionModals/NewFileModal";
 import { useId } from "@mantine/hooks";
+import { NewFolderModal } from "./CollectionModals/NewFolderModal";
 
 function useModal<TProps = any>({
     title,
@@ -20,11 +21,11 @@ function useModal<TProps = any>({
     icon?: ReactNode;
     renderer: (props: ModalContentProps<TProps>) => ReactNode;
     modalSettings?: Partial<Parameters<typeof modals.open>[0]>;
-}): (props?: TProps & { onEvent?: EventTrigger }) => void {
+}): (props?: Partial<TProps> & { onEvent?: EventTrigger }) => void {
     const RenderElement: any = renderer;
     const id = useId();
     const activateModal = useCallback(
-        (props?: TProps & { onEvent?: EventTrigger }) => {
+        (props?: Partial<TProps> & { onEvent?: EventTrigger }) => {
             const { onEvent, ...renderProps } = props ?? {};
             modals.open({
                 modalId: id,
@@ -87,8 +88,18 @@ export function useModals() {
         },
     });
 
+    const newCollectionFolder = useModal({
+        title: t("modals.newFolder.title"),
+        icon: <IconFolderPlus />,
+        renderer: NewFolderModal,
+        modalSettings: {
+            size: "xl",
+        },
+    });
+
     return {
         userSettings,
         newCollectionFile,
+        newCollectionFolder,
     };
 }

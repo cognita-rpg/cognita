@@ -121,7 +121,13 @@ function FeatureItem({
     );
 }
 
-export function NewFileModal({ trigger }: { trigger: EventTrigger }) {
+export function NewFileModal({
+    trigger,
+    parent,
+}: {
+    trigger: EventTrigger;
+    parent: string | null;
+}) {
     const { t } = useTranslation();
     const api = useApiMethods(CollectionsMixin);
 
@@ -354,7 +360,7 @@ export function NewFileModal({ trigger }: { trigger: EventTrigger }) {
                                     name: form.values.name,
                                     summary: form.values.summary,
                                     tags: form.values.tags,
-                                    parent: null,
+                                    parent,
                                     template: form.values.template as any,
                                 })
                                 .then((result) => {

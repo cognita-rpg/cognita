@@ -142,7 +142,7 @@ export function FolderViewer({ entity }: { entity: CollectionEntity | null }) {
         useDisclosure(false);
     const itemsRef = useClickOutside(() => closeItemAdd());
     const { t } = useTranslation();
-    const { newCollectionFile } = useModals();
+    const { newCollectionFile, newCollectionFolder } = useModals();
     const api = useApiMethods(CollectionsMixin);
 
     const [children, setChildren] = useState<ReducedEntity[]>([]);
@@ -150,7 +150,7 @@ export function FolderViewer({ entity }: { entity: CollectionEntity | null }) {
         if (api.state === "ready") {
             api.get_entities(entity?.id).then(setChildren);
         }
-    }, [api.state]);
+    }, [api.state, entity?.id]);
     const onCreate = useCallback(
         (data: { parent: string | null } | null) => {
             if (data === null && entity === null) {
@@ -165,7 +165,7 @@ export function FolderViewer({ entity }: { entity: CollectionEntity | null }) {
 
     useEffect(() => {
         loadEntities();
-    }, [api.state]);
+    }, [api.state, entity?.id]);
     const theme = useMantineTheme();
 
     return (
@@ -202,6 +202,12 @@ export function FolderViewer({ entity }: { entity: CollectionEntity | null }) {
                                 size="lg"
                                 className="add-item-option"
                                 variant="light"
+                                onClick={() => {
+                                    newCollectionFolder({
+                                        parent: entity?.id ?? null,
+                                    });
+                                    closeItemAdd();
+                                }}
                             >
                                 <IconFolder size={20} />
                             </ActionIcon>
@@ -217,7 +223,9 @@ export function FolderViewer({ entity }: { entity: CollectionEntity | null }) {
                                 className="add-item-option"
                                 variant="light"
                                 onClick={() => {
-                                    newCollectionFile();
+                                    newCollectionFile({
+                                        parent: entity?.id ?? null,
+                                    });
                                     closeItemAdd();
                                 }}
                             >

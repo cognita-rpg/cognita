@@ -23,6 +23,8 @@ export function CollectionsView() {
     const api = useApiMethods(CollectionsMixin);
     const nav = useNavigate();
 
+    console.log(entityId, entity);
+
     useEffect(() => {
         if (entityId) {
             if (api.state === "ready") {
