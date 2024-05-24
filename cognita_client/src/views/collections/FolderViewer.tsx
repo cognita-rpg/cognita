@@ -5,13 +5,14 @@ import {
     Tooltip,
     ActionIcon,
     Paper,
-    SimpleGrid,
     Group,
     Text,
     Divider,
     Badge,
     Avatar,
     Image,
+    useMantineTheme,
+    px,
 } from "@mantine/core";
 import { useDisclosure, useClickOutside } from "@mantine/hooks";
 import {
@@ -31,6 +32,7 @@ import { useCallback, useEffect, useState } from "react";
 import { DynamicIcon } from "../../components/DynamicIcon";
 import { useNavigate } from "react-router-dom";
 import { useEvent } from "../../util/events";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
 function FolderItem({ entity }: { entity: ReducedEntity }) {
     const { t } = useTranslation();
@@ -149,24 +151,40 @@ export function FolderViewer({ entity }: { entity: CollectionEntity | null }) {
             api.get_entities(entity?.id).then(setChildren);
         }
     }, [api.state]);
-    useEvent("entity.create", loadEntities);
+    const onCreate = useCallback(
+        (data: { parent: string | null } | null) => {
+            if (data === null && entity === null) {
+                loadEntities();
+            } else if (data?.parent === entity?.id) {
+                loadEntities();
+            }
+        },
+        [entity?.id, loadEntities]
+    );
+    useEvent<{ parent: string | null }>("entity.create", onCreate);
 
     useEffect(() => {
         loadEntities();
     }, [api.state]);
+    const theme = useMantineTheme();
 
     return (
         <Box className="folder-main">
             <ScrollArea className="folder-scroll" p="sm">
-                <SimpleGrid
-                    spacing="xs"
-                    verticalSpacing="xs"
-                    cols={{ base: 1, sm: 2, md: 3, lg: 4 }}
+                <ResponsiveMasonry
+                    columnsCountBreakPoints={{
+                        [px(theme.breakpoints.xs)]: 1,
+                        [px(theme.breakpoints.sm)]: 2,
+                        [px(theme.breakpoints.md)]: 3,
+                        [px(theme.breakpoints.lg)]: 4,
+                    }}
                 >
-                    {children.map((child) => (
-                        <FolderItem entity={child} key={child.id} />
-                    ))}
-                </SimpleGrid>
+                    <Masonry gutter={theme.spacing.xs}>
+                        {children.map((child) => (
+                            <FolderItem entity={child} key={child.id} />
+                        ))}
+                    </Masonry>
+                </ResponsiveMasonry>
             </ScrollArea>
             <Box
                 className={"add-item-menu" + (itemAdd ? " active" : "")}
