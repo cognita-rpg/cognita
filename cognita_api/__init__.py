@@ -63,6 +63,7 @@ app = Litestar(
         UserSelfController,
         CollectionsController,
         EntityController,
+        FileEntityController,
     ],
     dependencies={
         "context": Provide(depends_context),

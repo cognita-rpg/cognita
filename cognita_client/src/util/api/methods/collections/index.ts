@@ -1,5 +1,6 @@
 import {
     CollectionEntity,
+    CollectionFileEntity,
     EntityCreate,
     ReducedEntity,
 } from "../../../../types/collections";
@@ -70,6 +71,21 @@ export function CollectionsMixin<TBase extends Constructor<BaseAPIMethods>>(
                 return result.data;
             } else {
                 return [];
+            }
+        }
+
+        public async update_file_entity_contents(
+            id: string,
+            data: any
+        ): Promise<CollectionFileEntity | null> {
+            const result = await this.request<CollectionFileEntity>(
+                `/collections/${id}/files/update`,
+                { method: "POST", body: data }
+            );
+            if (result.success) {
+                return result.data;
+            } else {
+                return null;
             }
         }
     };

@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { useApi } from "../api";
 import { EventContext } from "./types";
 import useDeepCompareEffect from "use-deep-compare-effect";
@@ -46,13 +46,22 @@ export function EventsProvider({
         };
     }, [listeners, setSocket, api.state]);
 
+    const registerListener = useCallback(
+        (id: any, event: any, callback: any) =>
+            listenerMethods.append({ id, event, callback }),
+        []
+    );
+
+    const deregisterListener = useCallback(
+        (id: any) => listenerMethods.filter((v) => v.id !== id),
+        []
+    );
+
     return (
         <EventContext.Provider
             value={{
-                registerListener: (id, event, callback) =>
-                    listenerMethods.append({ id, event, callback }),
-                deregisterListener: (id) =>
-                    listenerMethods.filter((v) => v.id !== id),
+                registerListener,
+                deregisterListener,
             }}
         >
             {children}

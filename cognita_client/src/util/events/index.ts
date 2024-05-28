@@ -14,10 +14,10 @@ export function useEvent<TData = any>(
         return () => context.deregisterListener(id);
     }, [
         id,
-        context.registerListener,
-        context.deregisterListener,
         type,
         callback,
+        context.deregisterListener,
+        context.registerListener,
     ]);
 }
 

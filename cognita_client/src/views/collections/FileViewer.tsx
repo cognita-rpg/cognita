@@ -23,8 +23,21 @@ import {
     IconTrashFilled,
 } from "@tabler/icons-react";
 import { useCallback, useState } from "react";
-import { useMediaQuery } from "@mantine/hooks";
+import { useDebouncedValue, useDidUpdate, useMediaQuery } from "@mantine/hooks";
 import { PluginWrapper } from "cognita-sdk";
+import {
+    CollectionsMixin,
+    useApiMethods,
+    useSession,
+    useUser,
+} from "../../util/api";
+import { useEvent } from "../../util/events";
+
+type FileUpdateType = {
+    id: string;
+    origin: string;
+    content: any;
+};
 
 export function FileViewer({ entity }: { entity: CollectionFileEntity }) {
     const { t } = useTranslation();
@@ -35,6 +48,27 @@ export function FileViewer({ entity }: { entity: CollectionFileEntity }) {
     const [mode, setMode] = useState<"edit" | "view">("view");
     const isMobile = useMediaQuery("(max-width: 600px)", false);
     const [content, setContent] = useState<any>(entity.content);
+    const [localContent, setLocalContent] = useState<any>(entity.content);
+    const [debouncedContent] = useDebouncedValue(localContent, 200);
+    const api = useApiMethods(CollectionsMixin);
+    const session = useSession();
+
+    useDidUpdate(() => {
+        api.update_file_entity_contents(entity.id, debouncedContent);
+    }, [debouncedContent, entity.id]);
+
+    const onUpdate = useCallback(
+        (update: FileUpdateType | null) => {
+            if (update) {
+                if (update.id === entity.id && update.origin !== session?.id) {
+                    setContent(update.content);
+                }
+            }
+        },
+        [session?.id, setContent, entity.id]
+    );
+
+    useEvent("entity.update", onUpdate);
 
     const FileControls = useCallback(() => {
         return (
@@ -150,7 +184,10 @@ export function FileViewer({ entity }: { entity: CollectionFileEntity }) {
                                 ] as any
                             }
                             value={content}
-                            onChange={setContent}
+                            onChange={(value: any) => {
+                                setContent(value);
+                                setLocalContent(value);
+                            }}
                         />
                     ) : (
                         <ExportedComponent
