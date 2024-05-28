@@ -68,10 +68,15 @@ function FolderItem({ entity }: { entity: ReducedEntity }) {
                         <Divider />
                         <Text
                             size="sm"
-                            c={entity.summary ? undefined : "dimmed"}
+                            c={
+                                entity.summary && entity.summary.length > 0
+                                    ? undefined
+                                    : "dimmed"
+                            }
                         >
-                            {entity.summary ??
-                                t("views.collections.item.no_summary")}
+                            {entity.summary && entity.summary.length > 0
+                                ? entity.summary
+                                : t("views.collections.item.no_summary")}
                         </Text>
                     </Stack>
                 </Paper>
@@ -153,7 +158,7 @@ export function FolderViewer({ entity }: { entity: CollectionEntity | null }) {
     }, [api.state, entity?.id]);
     const onCreate = useCallback(
         (data: { parent: string | null } | null) => {
-            if (data === null && entity === null) {
+            if (data?.parent === null && entity === null) {
                 loadEntities();
             } else if (data?.parent === entity?.id) {
                 loadEntities();

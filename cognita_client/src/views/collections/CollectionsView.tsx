@@ -4,15 +4,18 @@ import { CollectionEntity, ReducedEntity } from "../../types/collections";
 import { CollectionsMixin, useApiMethods } from "../../util/api";
 import {
     ActionIcon,
+    Anchor,
     Box,
+    Button,
     Divider,
     Group,
     Loader,
     Paper,
     Stack,
+    Text,
 } from "@mantine/core";
 import { FolderViewer } from "./FolderViewer";
-import { IconHomeFilled } from "@tabler/icons-react";
+import { IconFolderUp, IconHomeFilled } from "@tabler/icons-react";
 
 export function CollectionsView() {
     const { entityId } = useParams<{ entityId?: string }>();
@@ -37,9 +40,12 @@ export function CollectionsView() {
                         nav("/collections");
                     }
                 });
+
+                api.get_entity_path(entityId).then(setPath);
             }
         } else {
             setEntity(null);
+            setPath([]);
         }
     }, [entityId, api.state]);
 
@@ -55,8 +61,44 @@ export function CollectionsView() {
                     >
                         <IconHomeFilled size={20} />
                     </ActionIcon>
+                    {path.length > 0 && (
+                        <ActionIcon
+                            radius="sm"
+                            size="lg"
+                            variant="light"
+                            onClick={() => {
+                                if (path.length === 1) {
+                                    nav("/collections");
+                                } else {
+                                    nav(`/collections/${path.at(-2)?.id}`);
+                                }
+                            }}
+                        >
+                            <IconFolderUp size={20} />
+                        </ActionIcon>
+                    )}
                     <Paper className="entity-path" radius="sm" withBorder>
-                        /
+                        {path.length > 0 ? (
+                            <Group gap="xs">
+                                <Text>/</Text>
+                                {path.map((v) => (
+                                    <>
+                                        <Anchor
+                                            key={v.id}
+                                            c="var(--mantine-color-default-text)"
+                                            onClick={() =>
+                                                nav(`/collections/${v.id}`)
+                                            }
+                                        >
+                                            {v.name}
+                                        </Anchor>
+                                        <Text>/</Text>
+                                    </>
+                                ))}
+                            </Group>
+                        ) : (
+                            "/"
+                        )}
                     </Paper>
                 </Group>
                 <Divider />

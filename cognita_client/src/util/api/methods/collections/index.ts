@@ -61,5 +61,16 @@ export function CollectionsMixin<TBase extends Constructor<BaseAPIMethods>>(
                 return null;
             }
         }
+
+        public async get_entity_path(id: string): Promise<ReducedEntity[]> {
+            const result = await this.request<ReducedEntity[]>(
+                `/collections/${id}/path`
+            );
+            if (result.success) {
+                return result.data;
+            } else {
+                return [];
+            }
+        }
     };
 }

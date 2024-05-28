@@ -104,7 +104,9 @@ class CollectionsController(Controller):
         )
 
         await entity.save()
-        await events.publish("entity.create", entity, data={"parent": parent.id})
+        await events.publish(
+            "entity.create", entity, data={"parent": parent.id if parent else None}
+        )
         return entity
 
     @get("/file_templates")
