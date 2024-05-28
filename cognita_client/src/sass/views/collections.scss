@@ -71,3 +71,10 @@
         }
     }
 }
+
+.file-main {
+    height: 100%;
+    .file-content {
+        flex-grow: 1;
+    }
+}

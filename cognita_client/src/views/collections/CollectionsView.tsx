@@ -6,7 +6,6 @@ import {
     ActionIcon,
     Anchor,
     Box,
-    Button,
     Divider,
     Group,
     Loader,
@@ -16,6 +15,22 @@ import {
 } from "@mantine/core";
 import { FolderViewer } from "./FolderViewer";
 import { IconFolderUp, IconHomeFilled } from "@tabler/icons-react";
+import { FileViewer } from "./FileViewer";
+
+function PathItem({ entity }: { entity: ReducedEntity }) {
+    const nav = useNavigate();
+    return (
+        <>
+            <Anchor
+                c="var(--mantine-color-default-text)"
+                onClick={() => nav(`/collections/${entity.id}`)}
+            >
+                {entity.name}
+            </Anchor>
+            <Text>/</Text>
+        </>
+    );
+}
 
 export function CollectionsView() {
     const { entityId } = useParams<{ entityId?: string }>();
@@ -25,8 +40,6 @@ export function CollectionsView() {
     const [path, setPath] = useState<ReducedEntity[]>([]);
     const api = useApiMethods(CollectionsMixin);
     const nav = useNavigate();
-
-    console.log(entityId, entity);
 
     useEffect(() => {
         if (entityId) {
@@ -82,18 +95,7 @@ export function CollectionsView() {
                             <Group gap="xs">
                                 <Text>/</Text>
                                 {path.map((v) => (
-                                    <>
-                                        <Anchor
-                                            key={v.id}
-                                            c="var(--mantine-color-default-text)"
-                                            onClick={() =>
-                                                nav(`/collections/${v.id}`)
-                                            }
-                                        >
-                                            {v.name}
-                                        </Anchor>
-                                        <Text>/</Text>
-                                    </>
+                                    <PathItem entity={v} key={v.id} />
                                 ))}
                             </Group>
                         ) : (
@@ -108,7 +110,7 @@ export function CollectionsView() {
                     ) : entity === null || entity.type === "folder" ? (
                         <FolderViewer entity={entity} />
                     ) : entity.type === "file" ? (
-                        <></>
+                        <FileViewer entity={entity} />
                     ) : (
                         <></>
                     )}

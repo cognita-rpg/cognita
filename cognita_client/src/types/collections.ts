@@ -21,8 +21,7 @@ export interface CollectionImageEntity extends CollectionEntityBase {
 export interface CollectionFileEntity<TData = any>
     extends CollectionEntityBase {
     type: "file";
-    template_plugin: string;
-    template_name: string;
+    template: PluginFeatureReference<PluginArticleTemplateFeature>;
     content: TData | null;
 }
 

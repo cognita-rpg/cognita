@@ -54,6 +54,9 @@
         "summary": "Summary",
         "tags": "Tags",
         "no_tags": "No tags provided."
+      },
+      "file": {
+        "no_summary": "No summary."
       }
     }
   },
