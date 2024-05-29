@@ -21,20 +21,14 @@ export type PluginFunctionExport = {
 
 export type PluginAssetExport = {
     type: "asset";
-    file: string;
-    mime_type: string;
-};
-
-export type PluginJSONExport = {
-    type: "json";
-    file: string;
+    file_selector: string;
+    mime_type: string | null;
 };
 
 export type PluginExport =
     | PluginComponentExport
     | PluginFunctionExport
-    | PluginAssetExport
-    | PluginJSONExport;
+    | PluginAssetExport;
 
 export type PluginArticleTemplateFeature = {
     type: "article-template";

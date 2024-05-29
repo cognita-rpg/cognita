@@ -6,7 +6,6 @@ import yaml
 from .models import (
     PluginManifest,
     PluginManifest_Metadata,
-    PluginJSONExport,
     PluginAssetExport,
     PluginComponentExport,
     PluginFunctionExport,

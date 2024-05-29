@@ -4,7 +4,6 @@ import {
     PluginComponentExport,
     PluginExport,
     PluginFunctionExport,
-    PluginJSONExport,
     PluginManifest,
 } from "../../types/plugin";
 
@@ -30,8 +29,6 @@ export type ResolvedExportType<TExport extends PluginExport> =
         ? (...args: any[]) => any
         : TExport extends PluginAssetExport
         ? string
-        : TExport extends PluginJSONExport
-        ? object
         : never;
 
 export type ResolvedPluginExport<TExport extends PluginExport = PluginExport> =

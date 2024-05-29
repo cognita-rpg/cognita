@@ -25,18 +25,11 @@ class PluginFunctionExport(BaseModel):
 
 class PluginAssetExport(BaseModel):
     type: Literal["asset"] = "asset"
-    file: str
-    mime_type: str = "application/octet-stream"
+    file_selector: str
+    mime_type: str | None = None
 
 
-class PluginJSONExport(BaseModel):
-    type: Literal["json"] = "json"
-    file: str
-
-
-EXPORT_TYPES = (
-    PluginComponentExport | PluginFunctionExport | PluginAssetExport | PluginJSONExport
-)
+EXPORT_TYPES = PluginComponentExport | PluginFunctionExport | PluginAssetExport
 
 
 class PluginBaseFeature(BaseModel):

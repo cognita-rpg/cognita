@@ -25,12 +25,7 @@ import {
 import { useCallback, useState } from "react";
 import { useDebouncedValue, useDidUpdate, useMediaQuery } from "@mantine/hooks";
 import { PluginWrapper } from "cognita-sdk";
-import {
-    CollectionsMixin,
-    useApiMethods,
-    useSession,
-    useUser,
-} from "../../util/api";
+import { CollectionsMixin, useApiMethods, useSession } from "../../util/api";
 import { useEvent } from "../../util/events";
 
 type FileUpdateType = {

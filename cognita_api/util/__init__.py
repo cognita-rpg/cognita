@@ -10,7 +10,6 @@ from .plugin import (
     PluginFunctionExport,
     PluginAssetExport,
     PluginComponentExport,
-    PluginJSONExport,
     PluginArticleTemplateFeature,
     PluginCompendiumTemplateFeature,
     PluginFeatureReference,
