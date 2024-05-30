@@ -1,3 +1,5 @@
+import mimetypes
+import os
 from typing import AsyncGenerator
 from litestar import Controller, get
 from ..util import PluginManifest, Context, Plugin
@@ -20,14 +22,13 @@ class PluginController(Controller):
 
         return result.manifest
 
-    @get("/{name:str}/export/{export:str}")
-    async def get_plugin_export(
-        self, context: Context, name: str, export: str
-    ) -> Stream:
+    async def get_plugin_export_inner(
+        self, context: Context, name: str, export: str, subpath: str
+    ) -> Stream | list[str]:
         async def read_export(
-            plugin: Plugin, export: str
+            plugin: Plugin, export: str, subpath: str | None
         ) -> AsyncGenerator[bytes, None]:
-            with plugin.get_export(export) as f:
+            with plugin.get_export(export, subpath=subpath) as f:
                 while True:
                     chunk = f.read(256 * 1024)
                     if not chunk:
@@ -43,8 +44,46 @@ class PluginController(Controller):
 
         plug_export = plugin.manifest.exports.get(export)
         if plug_export.type in ["function", "component"]:
-            return Stream(read_export(plugin, export), media_type="text/javascript")
+            return Stream(
+                read_export(plugin, export, subpath=subpath),
+                media_type="text/javascript",
+            )
         elif plug_export.type == "asset":
-            return Stream(read_export(plugin, export), media_type=plug_export.mime_type)
-        else:
-            return Stream(read_export(plugin, export), media_type="application/json")
+            if not os.path.exists(os.path.join(plugin.folder, subpath.lstrip("/"))):
+                raise NotFoundException("error.api.plugin.export.file_not_found")
+            files = plugin.get_export_files(
+                export,
+                subpath=subpath.lstrip("/") if subpath and subpath != "/" else None,
+            )
+            if len(files) == 1:
+                guessed_type = mimetypes.guess_type(files[0])
+                return Stream(
+                    read_export(
+                        plugin,
+                        export,
+                        subpath=(
+                            subpath.lstrip("/") if subpath and subpath != "/" else None
+                        ),
+                    ),
+                    media_type=(
+                        plug_export.mime_type
+                        if plug_export.mime_type
+                        else (
+                            guessed_type if guessed_type else "application/octet-stream"
+                        )
+                    ),
+                )
+            else:
+                return files
+
+    @get("/{name:str}/export/{export:str}/{subpath:path}")
+    async def get_plugin_export_file(
+        self, context: Context, name: str, export: str, subpath: str
+    ) -> Stream | list[str]:
+        return await self.get_plugin_export_inner(context, name, export, subpath)
+
+    @get("/{name:str}/export/{export:str}")
+    async def get_plugin_export_root(
+        self, context: Context, name: str, export: str
+    ) -> Stream | list[str]:
+        return await self.get_plugin_export_inner(context, name, export, None)
