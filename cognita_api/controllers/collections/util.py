@@ -9,6 +9,7 @@ from ...models import (
     COLLECTION_ENTITY,
     CollectionEntity,
     EntityRelation,
+    FileTemplateReference,
 )
 
 
@@ -19,7 +20,7 @@ class EntityCreationModel(BaseModel):
     summary: str
     tags: list[str]
     url: str | None = None  # Only relevant for `image`
-    template: PluginFeatureReference | None = None  # Only relevant for `file`
+    template: FileTemplateReference | None = None  # Only relevant for `file`
     color: str | None = None  # Only relevant for `folder`
     icon: str | None = None  # Only relevant for `folder`
 
@@ -31,7 +32,7 @@ class ReducedEntity(BaseModel):
     summary: str
     tags: list[str]
     url: str | None = None  # Only relevant for `image`
-    template: PluginFeatureReference | None = None  # Only relevant for `file`
+    template: FileTemplateReference | None = None  # Only relevant for `file`
     color: str | None = None  # Only relevant for `folder`
     icon: str | None = None  # Only relevant for `folder`
 

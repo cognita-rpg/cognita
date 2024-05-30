@@ -1,5 +1,3 @@
-import { PluginArticleTemplateFeature, PluginFeatureReference } from "./plugin";
-
 interface CollectionEntityBase {
     id: string;
     type: string;
@@ -21,7 +19,10 @@ export interface CollectionImageEntity extends CollectionEntityBase {
 export interface CollectionFileEntity<TData = any>
     extends CollectionEntityBase {
     type: "file";
-    template: PluginFeatureReference<PluginArticleTemplateFeature>;
+    template: {
+        plugin: string;
+        feature: string;
+    };
     content: TData | null;
 }
 
@@ -47,7 +48,10 @@ export interface CollectionImageEntityCreate extends CollectionEntityCreate {
 
 export interface CollectionFileEntityCreate extends CollectionEntityCreate {
     type: "file";
-    template: PluginFeatureReference<PluginArticleTemplateFeature>;
+    template: {
+        plugin: string;
+        feature: string;
+    };
 }
 
 export type EntityCreate =
@@ -65,6 +69,9 @@ export type ReducedEntity = {
     | { type: "image"; url: string }
     | {
           type: "file";
-          template: PluginFeatureReference<PluginArticleTemplateFeature>;
+          template: {
+              plugin: string;
+              feature: string;
+          };
       }
 );

@@ -25,8 +25,15 @@ import {
 import { useCallback, useState } from "react";
 import { useDebouncedValue, useDidUpdate, useMediaQuery } from "@mantine/hooks";
 import { PluginWrapper } from "cognita-sdk";
-import { CollectionsMixin, useApiMethods, useSession } from "../../util/api";
+import {
+    CollectionsMixin,
+    PluginMixin,
+    useApiMethods,
+    useSession,
+} from "../../util/api";
 import { useEvent } from "../../util/events";
+import { usePluginFeature } from "../../util/plugin/hooks";
+import { PluginArticleTemplateFeature } from "../../types/plugin";
 
 type FileUpdateType = {
     id: string;
@@ -36,16 +43,21 @@ type FileUpdateType = {
 
 export function FileViewer({ entity }: { entity: CollectionFileEntity }) {
     const { t } = useTranslation();
+    const api = useApiMethods(CollectionsMixin, PluginMixin);
+    const template = usePluginFeature<PluginArticleTemplateFeature>(
+        entity.template.plugin,
+        entity.template.feature
+    );
     const exported = usePluginExport(
-        entity.template.plugin_name,
-        ...Object.keys(entity.template.exports)
+        entity.template.plugin,
+        ...Object.keys(template?.exports ?? {})
     );
     const [mode, setMode] = useState<"edit" | "view">("view");
     const isMobile = useMediaQuery("(max-width: 600px)", false);
     const [content, setContent] = useState<any>(entity.content);
     const [localContent, setLocalContent] = useState<any>(entity.content);
     const [debouncedContent] = useDebouncedValue(localContent, 200);
-    const api = useApiMethods(CollectionsMixin);
+
     const session = useSession();
 
     useDidUpdate(() => {
@@ -105,7 +117,7 @@ export function FileViewer({ entity }: { entity: CollectionFileEntity }) {
     }, [mode, setMode]);
 
     const FileTitle = useCallback(() => {
-        return (
+        return template ? (
             <Group gap="xs">
                 <IconFileText />
                 <Stack gap={2} style={{ flexGrow: isMobile ? 1 : undefined }}>
@@ -119,10 +131,10 @@ export function FileViewer({ entity }: { entity: CollectionFileEntity }) {
                 {!isMobile && <Divider orientation="vertical" />}
                 <Paper p="xs" radius="xs">
                     <Group gap="sm" justify="space-between">
-                        {entity.template.plugin_info.image ? (
+                        {template.plugin_info.image ? (
                             <Avatar size="sm">
                                 <Image
-                                    src={entity.template.plugin_info.image}
+                                    src={template.plugin_info.image}
                                     w={28}
                                     h={28}
                                 />
@@ -132,27 +144,27 @@ export function FileViewer({ entity }: { entity: CollectionFileEntity }) {
                                 <IconPuzzleFilled />
                             </Avatar>
                         )}
-                        {entity.template.plugin_info.version ? (
+                        {template.plugin_info.version ? (
                             <Stack gap={2} align="end">
                                 <Text size="xs">
-                                    {entity.template.plugin_info.name}
+                                    {template.plugin_info.name}
                                 </Text>
                                 <Badge variant="light" size="xs">
-                                    {entity.template.plugin_info.version}
+                                    {template.plugin_info.version}
                                 </Badge>
                             </Stack>
                         ) : (
-                            <Text size="sm">
-                                {entity.template.plugin_info.name}
-                            </Text>
+                            <Text size="sm">{template.plugin_info.name}</Text>
                         )}
                     </Group>
                 </Paper>
             </Group>
+        ) : (
+            <></>
         );
-    }, [entity, t, isMobile]);
+    }, [entity, t, isMobile, template?.feature_name]);
 
-    return (
+    return template ? (
         <Stack gap="xs" className="file-main" p="xs">
             <Paper bg="var(--mantine-color-default" p={8}>
                 {isMobile ? (
@@ -170,12 +182,12 @@ export function FileViewer({ entity }: { entity: CollectionFileEntity }) {
                 )}
             </Paper>
             <Paper withBorder p="sm" className="file-content">
-                <PluginWrapper plugin={entity.template}>
+                <PluginWrapper plugin={template}>
                     {mode === "edit" ? (
                         <ExportedComponent
                             exported={
                                 exported[
-                                    entity.template.feature_info.form_renderer
+                                    template.feature_info.form_renderer
                                 ] as any
                             }
                             value={content}
@@ -188,7 +200,7 @@ export function FileViewer({ entity }: { entity: CollectionFileEntity }) {
                         <ExportedComponent
                             exported={
                                 exported[
-                                    entity.template.feature_info.text_renderer
+                                    template.feature_info.text_renderer
                                 ] as any
                             }
                             data={content}
@@ -197,5 +209,7 @@ export function FileViewer({ entity }: { entity: CollectionFileEntity }) {
                 </PluginWrapper>
             </Paper>
         </Stack>
+    ) : (
+        <></>
     );
 }

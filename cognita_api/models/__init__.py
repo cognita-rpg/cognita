@@ -7,4 +7,5 @@ from .collections import (
     FolderEntity,
     ImageEntity,
     COLLECTION_ENTITY,
+    FileTemplateReference,
 )

@@ -33,10 +33,15 @@ import { DynamicIcon } from "../../components/DynamicIcon";
 import { useNavigate } from "react-router-dom";
 import { useEvent } from "../../util/events";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import { usePluginFeature } from "../../util/plugin/hooks";
 
 function FolderItem({ entity }: { entity: ReducedEntity }) {
     const { t } = useTranslation();
     const nav = useNavigate();
+    const template = usePluginFeature(
+        entity.type === "file" ? entity.template.plugin : null,
+        entity.type === "file" ? entity.template.feature : null
+    );
     return (
         <Paper
             className="folder-item"
@@ -104,13 +109,13 @@ function FolderItem({ entity }: { entity: ReducedEntity }) {
                         )}
                     </Stack>
                 </Paper>
-                {entity.type === "file" && (
+                {entity.type === "file" && template && (
                     <Paper p="xs" radius="xs">
                         <Group gap="sm" justify="space-between">
-                            {entity.template.plugin_info.image ? (
+                            {template.plugin_info.image ? (
                                 <Avatar>
                                     <Image
-                                        src={entity.template.plugin_info.image}
+                                        src={template.plugin_info.image}
                                         w={38}
                                         h={38}
                                     />
@@ -120,18 +125,18 @@ function FolderItem({ entity }: { entity: ReducedEntity }) {
                                     <IconPuzzleFilled />
                                 </Avatar>
                             )}
-                            {entity.template.plugin_info.version ? (
+                            {template.plugin_info.version ? (
                                 <Stack gap={2} align="end">
                                     <Text size="sm">
-                                        {entity.template.plugin_info.name}
+                                        {template.plugin_info.name}
                                     </Text>
                                     <Badge variant="light">
-                                        {entity.template.plugin_info.version}
+                                        {template.plugin_info.version}
                                     </Badge>
                                 </Stack>
                             ) : (
                                 <Text size="sm">
-                                    {entity.template.plugin_info.name}
+                                    {template.plugin_info.name}
                                 </Text>
                             )}
                         </Group>

@@ -2,7 +2,7 @@ import mimetypes
 import os
 from typing import AsyncGenerator
 from litestar import Controller, get
-from ..util import PluginManifest, Context, Plugin
+from ..util import PluginManifest, Context, Plugin, PluginFeatureReference
 from litestar.exceptions import *
 from litestar.response import Stream
 
@@ -127,3 +127,29 @@ class PluginController(Controller):
         self, context: Context, name: str, export: str
     ) -> Stream | list[str]:
         return await self.get_plugin_export_files_inner(context, name, export, None)
+
+    @get("/{name:str}/features")
+    async def get_plugin_features(
+        self, context: Context, name: str
+    ) -> list[PluginFeatureReference]:
+        plugin = context.plugins.get(name)
+        if not plugin:
+            raise NotFoundException("error.api.plugin.unknown")
+
+        return [
+            PluginFeatureReference.from_feature(plugin.manifest, i.name)
+            for i in plugin.manifest.features
+        ]
+
+    @get("/{name:str}/features/{feature:str}")
+    async def get_plugin_feature(
+        self, context: Context, name: str, feature: str
+    ) -> PluginFeatureReference:
+        plugin = context.plugins.get(name)
+        if not plugin:
+            raise NotFoundException("error.api.plugin.unknown")
+
+        feat = [i for i in plugin.manifest.features if i.name == feature]
+        if len(feat) == 1:
+            return PluginFeatureReference.from_feature(plugin.manifest, feature)
+        raise NotFoundException("error.api.plugin.feature.unknown")

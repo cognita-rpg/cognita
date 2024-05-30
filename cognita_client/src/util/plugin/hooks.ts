@@ -1,11 +1,16 @@
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import {
     PluginContext,
     PluginContextType,
     ResolvedPluginExport,
     FullExport,
 } from "./types";
-import { PluginExport, PluginManifest } from "../../types/plugin";
+import {
+    PluginExport,
+    PluginFeature,
+    PluginFeatureReference,
+    PluginManifest,
+} from "../../types/plugin";
 import createLoadRemoteModule, {
     createRequires,
 } from "@paciolan/remote-module-loader";
@@ -130,4 +135,25 @@ export function usePluginExport(
         return output;
     }, [plugin, exports.length, plugins.state, api.state]);
     return results;
+}
+
+export function usePluginFeature<TFeature extends PluginFeature = any>(
+    plugin: string | null,
+    name: string | null
+): PluginFeatureReference<TFeature> | null {
+    const plugins = usePlugins();
+    const api = useApi();
+    const methods = useApiMethods(PluginMixin);
+    const [result, setResult] =
+        useState<PluginFeatureReference<TFeature> | null>(null);
+
+    useEffect(() => {
+        if (plugin && name) {
+            methods.get_plugin_feature(plugin, name).then(setResult);
+        } else {
+            setResult(null);
+        }
+    }, [plugins.state, api.state, plugin, name]);
+
+    return result;
 }

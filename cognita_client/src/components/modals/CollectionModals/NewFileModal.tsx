@@ -361,7 +361,14 @@ export function NewFileModal({
                                     summary: form.values.summary,
                                     tags: form.values.tags,
                                     parent,
-                                    template: form.values.template as any,
+                                    template: {
+                                        plugin:
+                                            form.values.template?.plugin_name ??
+                                            "",
+                                        feature:
+                                            form.values.template
+                                                ?.feature_name ?? "",
+                                    },
                                 })
                                 .then((result) => {
                                     if (result) {

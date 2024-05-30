@@ -1,4 +1,6 @@
 from typing import Any, Literal, Type, TypeVar
+
+from pydantic import BaseModel
 from .base import BaseObject
 from .links import EntityLink, EntityRelation, EntityType
 from ..util.plugin import PluginFeatureReference
@@ -62,9 +64,14 @@ class ImageEntity(CollectionEntity):
     url: str
 
 
+class FileTemplateReference(BaseModel):
+    plugin: str
+    feature: str
+
+
 class FileEntity(CollectionEntity):
     type: Literal["file"] = "file"
-    template: PluginFeatureReference
+    template: FileTemplateReference
     content: Any | None = None
 
 COLLECTION_ENTITY = FolderEntity | ImageEntity | FileEntity
