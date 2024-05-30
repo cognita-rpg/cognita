@@ -29,12 +29,14 @@ export type RequestOptions =
           method?: "GET" | "DELETE";
           path: string;
           params?: { [key: string]: any };
+          returnBody?: boolean;
       }
     | {
           method: "POST" | "PUT" | "PATCH";
           path: string;
           params?: { [key: string]: any };
           body?: object;
+          returnBody?: boolean;
       };
 
 export type RequestFunction = <TData = any, TError = any>(

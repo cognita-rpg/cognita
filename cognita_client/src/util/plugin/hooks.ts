@@ -9,7 +9,7 @@ import { PluginExport, PluginManifest } from "../../types/plugin";
 import createLoadRemoteModule, {
     createRequires,
 } from "@paciolan/remote-module-loader";
-import { ApiContextModel, useApi } from "../api";
+import { PluginMixin, useApi, useApiMethods } from "../api";
 
 export function usePlugins(): PluginContextType {
     return useContext(PluginContext);
@@ -46,7 +46,7 @@ export function usePlugin(name: string): PluginManifest | null {
 
 function getPluginExport<TExport extends PluginExport>(
     plugins: PluginContextType,
-    api: ApiContextModel,
+    api: any,
     name: string,
     exportName: string
 ): FullExport<TExport> {
@@ -88,23 +88,13 @@ function getPluginExport<TExport extends PluginExport>(
                 };
                 break;
             case "asset":
-                result = async () =>
-                    `/api/plugins/${name}/export/${exportName}` as any;
-                break;
-            case "json":
                 result = (async () => {
-                    if (api.state === "ready") {
-                        const result = await api.request<object>({
-                            path: `/plugins/${name}/export/${exportName}`,
-                        });
-                        if (result.success) {
-                            return result.data;
-                        } else {
-                            return null;
-                        }
-                    } else {
-                        return null;
-                    }
+                    return {
+                        getAsset: async (path?: string) =>
+                            await api.get_plugin_asset(name, exportName, path),
+                        getPaths: async (path?: string) =>
+                            await api.get_plugin_files(name, exportName, path),
+                    };
                 }) as any;
                 break;
         }
@@ -126,6 +116,7 @@ export function usePluginExport(
 ): { [key: string]: FullExport } {
     const plugins = usePlugins();
     const api = useApi();
+    const methods = useApiMethods(PluginMixin);
 
     const results = useMemo(() => {
         const output: {
@@ -133,7 +124,7 @@ export function usePluginExport(
         } = {};
 
         for (const exp of exports) {
-            output[exp] = getPluginExport(plugins, api, plugin, exp);
+            output[exp] = getPluginExport(plugins, methods, plugin, exp);
         }
 
         return output;

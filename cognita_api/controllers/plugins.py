@@ -49,7 +49,9 @@ class PluginController(Controller):
                 media_type="text/javascript",
             )
         elif plug_export.type == "asset":
-            if not os.path.exists(os.path.join(plugin.folder, subpath.lstrip("/"))):
+            if subpath and not os.path.exists(
+                os.path.join(plugin.folder, subpath.lstrip("/"))
+            ):
                 raise NotFoundException("error.api.plugin.export.file_not_found")
             files = plugin.get_export_files(
                 export,
@@ -69,21 +71,59 @@ class PluginController(Controller):
                         plug_export.mime_type
                         if plug_export.mime_type
                         else (
-                            guessed_type if guessed_type else "application/octet-stream"
+                            guessed_type[0]
+                            if guessed_type[0]
+                            else "application/octet-stream"
                         )
                     ),
                 )
             else:
-                return files
+                raise ClientException("error.api.plugin.export.is_directory")
 
     @get("/{name:str}/export/{export:str}/{subpath:path}")
     async def get_plugin_export_file(
         self, context: Context, name: str, export: str, subpath: str
-    ) -> Stream | list[str]:
+    ) -> Stream:
         return await self.get_plugin_export_inner(context, name, export, subpath)
 
     @get("/{name:str}/export/{export:str}")
     async def get_plugin_export_root(
         self, context: Context, name: str, export: str
-    ) -> Stream | list[str]:
+    ) -> Stream:
         return await self.get_plugin_export_inner(context, name, export, None)
+
+    async def get_plugin_export_files_inner(
+        self, context: Context, name: str, export: str, subpath: str
+    ) -> list[str]:
+        plugin = context.plugins.get(name)
+        if not plugin:
+            raise NotFoundException("error.api.plugin.unknown")
+
+        if not export in plugin.manifest.exports.keys():
+            raise NotFoundException("error.api.plugin.export.unknown")
+
+        plug_export = plugin.manifest.exports.get(export)
+        if plug_export.type in ["function", "component"]:
+            return ["/"]
+        elif plug_export.type == "asset":
+            if subpath and not os.path.exists(
+                os.path.join(plugin.folder, subpath.lstrip("/"))
+            ):
+                raise NotFoundException("error.api.plugin.export.file_not_found")
+            files = plugin.get_export_files(
+                export,
+                subpath=subpath.lstrip("/") if subpath and subpath != "/" else None,
+            )
+            return files
+
+    @get("/{name:str}/export/files/{export:str}/{subpath:path}")
+    async def get_plugin_export_files(
+        self, context: Context, name: str, export: str, subpath: str
+    ) -> Stream | list[str]:
+        return await self.get_plugin_export_files_inner(context, name, export, subpath)
+
+    @get("/{name:str}/export/files/{export:str}")
+    async def get_plugin_export_files_root(
+        self, context: Context, name: str, export: str
+    ) -> Stream | list[str]:
+        return await self.get_plugin_export_files_inner(context, name, export, None)

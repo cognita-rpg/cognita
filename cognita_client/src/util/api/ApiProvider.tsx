@@ -34,7 +34,21 @@ export function ApiProvider({
                     : {},
                 body: body ? JSON.stringify(body) : undefined,
             });
-
+            
+            if (options.returnBody) {
+                if (result.ok) {
+                    return {
+                        success: true,
+                        data: (await result.blob()) as any,
+                    };
+                } else {
+                    return {
+                        success: false,
+                        error: (await result.blob()) as any,
+                        code: result.status,
+                    };
+                }
+            }
             const data = await result.text();
             if (result.ok) {
                 try {

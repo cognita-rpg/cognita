@@ -24,5 +24,40 @@ export function PluginMixin<TBase extends Constructor<BaseAPIMethods>>(
                 return null;
             }
         }
+
+        public async get_plugin_asset(
+            slug: string,
+            export_name: string,
+            path?: string
+        ): Promise<Blob | null> {
+            const result = await this.request<Blob>(
+                `/plugins/${slug}/export/${export_name}${
+                    path ? "/" + path : ""
+                }`,
+                { returnBody: true }
+            );
+            if (result.success) {
+                return result.data;
+            } else {
+                return null;
+            }
+        }
+
+        public async get_plugin_files(
+            slug: string,
+            export_name: string,
+            path?: string
+        ): Promise<string[]> {
+            const result = await this.request<string[]>(
+                `/plugins/${slug}/export/files/${export_name}${
+                    path ? "/" + path : ""
+                }`
+            );
+            if (result.success) {
+                return result.data;
+            } else {
+                return [];
+            }
+        }
     };
 }

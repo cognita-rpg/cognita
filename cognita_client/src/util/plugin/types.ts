@@ -28,7 +28,10 @@ export type ResolvedExportType<TExport extends PluginExport> =
         : TExport extends PluginFunctionExport
         ? (...args: any[]) => any
         : TExport extends PluginAssetExport
-        ? string
+        ? {
+              getAsset: (path?: string) => Promise<Blob | null>;
+              getPaths: (path?: string) => Promise<string[]>;
+          }
         : never;
 
 export type ResolvedPluginExport<TExport extends PluginExport = PluginExport> =
